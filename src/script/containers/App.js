@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
-import Hello from './hello';
 import routes from '../config/routes';
 import logo from './logo.svg';
 import './App.css';
@@ -14,6 +13,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React!!</h1>
           <Link to="/">Home</Link>
           <Link to="/about-us">About</Link>
+          <Link to="/hello/2">Hello</Link>
         </header>
         {routes}
       </div>
