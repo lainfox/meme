@@ -1,0 +1,28 @@
+.blob-canvas {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 0;
+}
+
+.canvas-area {
+  outline: 1px solid olive;
+}
+.canvas-caption {
+  margin: 0 0 0 20px;
+  outline: 1px solid pink;
+}
+
+.canvas-caption .field {
+  margin: 0 0 20px;
+}
+.canvas-caption textarea {
+  width: 278px;
+  margin: 0 0;
+
+  resize: none;
+  font: 13px/20px "Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;
+  height: 60px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+}
