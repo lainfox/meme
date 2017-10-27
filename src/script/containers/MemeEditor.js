@@ -6,9 +6,10 @@ class MemeEditor extends Component {
   constructor(props) {
     super(props);
     this.image = new Image;
+    this.fontSize = 50;
     this.currentTopText = 'Top text';
     this.currentBottomText = 'Bottom text';
-    this.textType = {top: 1, bottom: 2}
+    this.textType = {top: 1, bottom: -1}
   }
 
   componentDidMount() {
@@ -31,13 +32,14 @@ class MemeEditor extends Component {
       var d = canvas.getContext("2d");
       d.fillStyle = "white",
       d.strokeStyle = "black",
-      d.lineWidth = 4,
+      d.lineWidth = 6,
       d.textAlign = "center";
-      var e = canvas.height / 8;
-      d.font = e + "px Impact Web, Impact",
+      var e = this.fontSize;
+      d.font = `700 ${e}px Nanum Gothic`,
+      d.lineJoin="miter";
       d.miterLimit = 2,
       this.drawCanvas(!0)
-    }, 1000)
+    }, 500)
   }
 
   drawCanvas(a) {
@@ -66,31 +68,43 @@ class MemeEditor extends Component {
 
   buildText(text, posType) {
     const canvas = this.refs.canvas;
-    const textList = text.split(/\r?\n/g).reduce((list, item, index) => {
+    let textArr = text.split(/\r?\n/g);
+    if (posType === -1) {// Bottom
+      textArr.reverse();
+    }
+
+    const textList = textArr.reduce((list, item, index) => {
       list[index] = {};
       list[index].text = item;
       list[index].posX = canvas.width / 2;
-      list[index].posY = (index * posType * canvas.height / 8) + 50;
+      list[index].posY = (posType === 1) ?
+        (index * posType * this.fontSize) + this.fontSize : // Top text
+        canvas.height + (index * posType * this.fontSize) - this.fontSize + 40; // Bottom text
       return list;
     }, {});
-    console.warn(textList);
 
     this.drawText(textList);
+  }
 
-    // var ctx = document.getElementById('canvas').getContext('2d');
-    // var text = ctx.measureText('foo'); // TextMetrics object
-    // text.width; // 16;
+  setFontSize(size) {
+    this.fontSize = this.fontSize + 5;
   }
 
   drawText(textList) {
     const canvas = this.refs.canvas;
 
     Object.keys(textList).forEach(index => {
+      canvas.getContext('2d').strokeText(
+        textList[index].text,
+        textList[index].posX,
+        textList[index].posY,
+        canvas.width - 10
+      );
       canvas.getContext('2d').fillText(
         textList[index].text,
         textList[index].posX,
         textList[index].posY,
-        canvas.width
+        canvas.width - 10
       );
     })
   }
