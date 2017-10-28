@@ -195,7 +195,7 @@ class MemeEditor extends Component {
       this.drawCanvas(true);
     }
 
-    const blob = dataURLtoBlob(this.canvas.toDataURL());
+    const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg'));
     this.saveButton.href = URL.createObjectURL(blob);
     this.saveButton.download = "myDomain.png";
 
