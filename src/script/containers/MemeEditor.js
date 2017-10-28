@@ -6,20 +6,23 @@ class MemeEditor extends Component {
   constructor(props) {
     super(props);
     this.image = new Image;
-    this.fontSize = 50;
+    this.fontSizeArray = [30,40,50,60,70]
+    this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 2;
     this.currentTopText = 'Top text';
     this.currentBottomText = 'Bottom text';
     this.textType = {top: 1, bottom: -1}
   }
 
   componentDidMount() {
-    this.image.onload = this.renderCanvasWithImage();
+    if (!this.image.complete) {
+      this.image.onload = this.renderCanvasWithImage.bind(this);
+    }
   }
 
   renderCanvasWithImage() {
     const canvas = this.refs.canvas;
-    canvas.width = 500;
-    canvas.height = 500;
+    canvas.width = this.image.width;
+    canvas.height = this.image.height;
 
     try {
       canvas.toDataURL()
@@ -28,33 +31,26 @@ class MemeEditor extends Component {
       return this.image.src = document.location.origin + "/ie/:id".replace(":id", this.model.get("id")), !1
     }
 
-    setTimeout(() => {
-      var d = canvas.getContext("2d");
-      d.fillStyle = "white",
-      d.strokeStyle = "black",
-      d.lineWidth = 6,
-      d.textAlign = "center";
-      var e = this.fontSize;
-      d.font = `700 ${e}px Nanum Gothic`,
-      d.lineJoin="miter";
-      d.miterLimit = 2,
-      this.drawCanvas(!0)
-    }, 500)
+    var d = canvas.getContext("2d");
+    d.fillStyle = "white",
+    d.strokeStyle = "black",
+    d.lineWidth = 6,
+    d.textAlign = "center";
+    d.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px Nanum Gothic`;
+    d.lineJoin="miter";
+    d.miterLimit = 2,
+    this.drawCanvas(!0)
   }
 
   drawCanvas(a) {
-      this.drawImage();
-      const topText = this.currentTopText;
-      const bottomText = this.currentBottomText;
-
-      this.buildText(topText, this.textType.top),
-      this.buildText(bottomText, this.textType.bottom)
+    this.drawImage();
+    this.buildText(this.currentTopText, this.textType.top);
+    this.buildText(this.currentBottomText, this.textType.bottom);
   }
 
   drawImage() {
-      var canvas = this.refs.canvas;
-      // console.log(this.image, 0, 0, a.width, a.height);
-      canvas.getContext('2d').drawImage(this.image, 0, 0, canvas.width, canvas.height);
+    var canvas = this.refs.canvas;
+    canvas.getContext('2d').drawImage(this.image, 0, 0, canvas.width, canvas.height);
   }
 
   topTextChanged(a) {
@@ -66,32 +62,60 @@ class MemeEditor extends Component {
       this.drawCanvas(!0)
   }
 
-  buildText(text, posType) {
+  buildText(text, which) {
     const canvas = this.refs.canvas;
     let textArr = text.split(/\r?\n/g);
-    if (posType === -1) {// Bottom
+    if (which === -1) {// Bottom
       textArr.reverse();
     }
+
+    const fontSize = (which === -1) ? this.fontSizeArray[this.bottomFontIndex] : this.fontSizeArray[this.topFontIndex];
+    const lineHeight = 1.3;
 
     const textList = textArr.reduce((list, item, index) => {
       list[index] = {};
       list[index].text = item;
       list[index].posX = canvas.width / 2;
-      list[index].posY = (posType === 1) ?
-        (index * posType * this.fontSize) + this.fontSize : // Top text
-        canvas.height + (index * posType * this.fontSize) - this.fontSize + 40; // Bottom text
+      list[index].posY = (which === 1) ?
+        ((index * which * fontSize) * lineHeight) + fontSize : // Top text
+        ((index * which * fontSize) * lineHeight) + canvas.height - 20; // Bottom text
       return list;
     }, {});
 
-    this.drawText(textList);
+    this.drawText(textList, which);
   }
 
-  setFontSize(size) {
-    this.fontSize = this.fontSize + 5;
+  setFontSize(which, index) {
+    // this.fontDefaultIndex = this.fontDefaultIndex + size;
+    this.fontSizeArray
+    if (which === 'top') {
+      this.topFontIndex = this.topFontIndex + index;
+      this.topFontIndex = this._getValidIndex(this.topFontIndex);
+    } else {
+      this.bottomFontIndex = this.bottomFontIndex + index;
+      this.bottomFontIndex = this._getValidIndex(this.bottomFontIndex)
+    }
+
+    this.drawCanvas();
   }
 
-  drawText(textList) {
+  _getValidIndex(index) {
+    if (index < 0) {
+      return 0;
+    } else if (index > this.fontSizeArray.length -1) {
+      return this.fontSizeArray.length -1;
+    } else {
+      return index;
+    }
+  }
+
+  drawText(textList, which) {
     const canvas = this.refs.canvas;
+    if (which === -1) { // bottom
+      canvas.getContext('2d').font = `700 ${this.fontSizeArray[this.bottomFontIndex]}px Nanum Gothic`;
+    } else {
+      canvas.getContext('2d').font = `700 ${this.fontSizeArray[this.topFontIndex]}px Nanum Gothic`;
+    }
 
     Object.keys(textList).forEach(index => {
       canvas.getContext('2d').strokeText(
@@ -124,9 +148,17 @@ class MemeEditor extends Component {
   }
 
   render() {
+    // CORS 에러로 안되는 이미지들
     // const imageUrl = 'http://event.leagueoflegends.co.kr/star-guardian-2017/img/star_guardian_miss_fortune_wp.jpg';
     // const imageUrl = 'http://www.dogdrip.net/dvs/b/i/17/10/23/78/593/888/142/b3d1fd0208c6aa79ed51862877aa6af7.jpg';
-    const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
+
+    // 얘는 됨
+    // const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
+
+    // 로컬 이미지
+    // const imageUrl = '/media/welcome.png';
+    const imageUrl = '/media/test-image.jpg';
+
     this.image.src = imageUrl;
     this.image.setAttribute("crossOrigin", "anonymous");
 
@@ -138,9 +170,19 @@ class MemeEditor extends Component {
         <div className="canvas-caption">
           <div className="field">
             <textarea type="text" ref="topText" placeholder="Top Text" onChange={this.topTextChanged.bind(this)}></textarea>
+            <ul className="segment-control font-size">
+              <li><button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1)}><span className="decrease-font-size">Decrease font size</span></button></li>
+              <li className="seperator"><span></span></li>
+              <li><button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1)}><span className="increase-font-size">Increase font size</span></button></li>
+            </ul>
           </div>
           <div className="field">
             <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={this.bottomTextChanged.bind(this)}></textarea>
+            <ul className="segment-control font-size">
+              <li><button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1)}><span className="decrease-font-size">Decrease font size</span></button></li>
+              <li className="seperator"><span></span></li>
+              <li><button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1)}><span className="increase-font-size">Increase font size</span></button></li>
+            </ul>
           </div>
         </div>
       </div>
