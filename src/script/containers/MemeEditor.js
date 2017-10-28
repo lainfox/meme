@@ -6,8 +6,8 @@ class MemeEditor extends Component {
   constructor(props) {
     super(props);
     this.image = new Image;
-    this.fontSizeArray = [30,40,50,60,70]
-    this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 2;
+    this.fontSizeArray = [20,30,40,50,60,70,80,90]
+    this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
     this.currentTopText = 'Top text';
     this.currentBottomText = 'Bottom text';
     this.textType = {top: 1, bottom: -1}
@@ -69,8 +69,29 @@ class MemeEditor extends Component {
       textArr.reverse();
     }
 
-    const fontSize = (which === -1) ? this.fontSizeArray[this.bottomFontIndex] : this.fontSizeArray[this.topFontIndex];
-    const lineHeight = 1.3;
+    let additional_fontSize;
+    switch(textArr.length) {
+    case 0:
+    case 1:
+    case 2:
+      additional_fontSize = 0;
+      break;
+    case 3:
+    case 4:
+      additional_fontSize = -1;
+      break;
+    case 5:
+    default:
+      additional_fontSize = -2;
+    }
+
+    const fontSize = (which === -1) ?
+      this.fontSizeArray[this._getValidIndex(this.bottomFontIndex + additional_fontSize)] :
+      this.fontSizeArray[this._getValidIndex(this.topFontIndex + additional_fontSize)];
+
+    console.log(which, fontSize)
+
+    const lineHeight = 1.2;
 
     const textList = textArr.reduce((list, item, index) => {
       list[index] = {};
@@ -82,40 +103,18 @@ class MemeEditor extends Component {
       return list;
     }, {});
 
+    this._setCanvasFont(fontSize);
     this.drawText(textList, which);
   }
 
-  setFontSize(which, index) {
-    // this.fontDefaultIndex = this.fontDefaultIndex + size;
-    this.fontSizeArray
-    if (which === 'top') {
-      this.topFontIndex = this.topFontIndex + index;
-      this.topFontIndex = this._getValidIndex(this.topFontIndex);
-    } else {
-      this.bottomFontIndex = this.bottomFontIndex + index;
-      this.bottomFontIndex = this._getValidIndex(this.bottomFontIndex)
-    }
-
-    this.drawCanvas();
-  }
-
-  _getValidIndex(index) {
-    if (index < 0) {
-      return 0;
-    } else if (index > this.fontSizeArray.length -1) {
-      return this.fontSizeArray.length -1;
-    } else {
-      return index;
-    }
+  _setCanvasFont(fontSize, which) {
+    const canvasContext = this.refs.canvas.getContext('2d');
+    canvasContext.font = `700 ${fontSize}px Nanum Gothic`;
   }
 
   drawText(textList, which) {
     const canvas = this.refs.canvas;
-    if (which === -1) { // bottom
-      canvas.getContext('2d').font = `700 ${this.fontSizeArray[this.bottomFontIndex]}px Nanum Gothic`;
-    } else {
-      canvas.getContext('2d').font = `700 ${this.fontSizeArray[this.topFontIndex]}px Nanum Gothic`;
-    }
+    
 
     Object.keys(textList).forEach(index => {
       canvas.getContext('2d').strokeText(
@@ -131,6 +130,32 @@ class MemeEditor extends Component {
         canvas.width - 10
       );
     })
+  }
+
+  setFontSize(which, index, doDrawCanvas) {
+    // this.fontDefaultIndex = this.fontDefaultIndex + size;
+    this.fontSizeArray
+    if (which === 'top' || which === 1) {
+      this.topFontIndex = this.topFontIndex + index;
+      this.topFontIndex = this._getValidIndex(this.topFontIndex);
+    } else {
+      this.bottomFontIndex = this.bottomFontIndex + index;
+      this.bottomFontIndex = this._getValidIndex(this.bottomFontIndex)
+    }
+
+    if (doDrawCanvas) {
+      this.drawCanvas();
+    }
+  }
+
+  _getValidIndex(index) {
+    if (index < 0) {
+      return 0;
+    } else if (index > this.fontSizeArray.length -1) {
+      return this.fontSizeArray.length -1;
+    } else {
+      return index;
+    }
   }
 
   getBase64Image(img) {
@@ -171,17 +196,17 @@ class MemeEditor extends Component {
           <div className="field">
             <textarea type="text" ref="topText" placeholder="Top Text" onChange={this.topTextChanged.bind(this)}></textarea>
             <ul className="segment-control font-size">
-              <li><button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1)}><span className="decrease-font-size">Decrease font size</span></button></li>
+              <li><button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
               <li className="seperator"><span></span></li>
-              <li><button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1)}><span className="increase-font-size">Increase font size</span></button></li>
+              <li><button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
             </ul>
           </div>
           <div className="field">
             <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={this.bottomTextChanged.bind(this)}></textarea>
             <ul className="segment-control font-size">
-              <li><button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1)}><span className="decrease-font-size">Decrease font size</span></button></li>
+              <li><button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
               <li className="seperator"><span></span></li>
-              <li><button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1)}><span className="increase-font-size">Increase font size</span></button></li>
+              <li><button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
             </ul>
           </div>
         </div>
