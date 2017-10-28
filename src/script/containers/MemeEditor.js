@@ -37,6 +37,7 @@ class MemeEditor extends Component {
     d.lineWidth = 6,
     d.textAlign = "center";
     d.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px Nanum Gothic`;
+    d.textBaseline = 'hanging';
     d.lineJoin="miter";
     d.miterLimit = 2,
     this.drawCanvas(!0)
@@ -98,8 +99,8 @@ class MemeEditor extends Component {
       list[index].text = item;
       list[index].posX = canvas.width / 2;
       list[index].posY = (which === 1) ?
-        ((index * which * fontSize) * lineHeight) + fontSize : // Top text
-        ((index * which * fontSize) * lineHeight) + canvas.height - 20; // Bottom text
+        (index * which * fontSize * lineHeight) + 20: // Top text
+        (index * which * fontSize * lineHeight) + canvas.height - fontSize - 10; // Bottom text
       return list;
     }, {});
 
