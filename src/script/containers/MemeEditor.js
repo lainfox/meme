@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import loadImage from 'blueimp-load-image';
+import dataURLtoBlob from 'blueimp-canvas-to-blob';
 import './MemeEditor.css';
 
 class MemeEditor extends Component {
@@ -10,7 +10,8 @@ class MemeEditor extends Component {
     this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
     this.currentTopText = 'Top text';
     this.currentBottomText = 'Bottom text';
-    this.textType = {top: 1, bottom: -1}
+    this.textType = {top: 1, bottom: -1};
+    this.waterMarkArea = 40;
   }
 
   componentDidMount() {
@@ -19,13 +20,16 @@ class MemeEditor extends Component {
     } else {
       this.renderCanvasWithImage()
     }
-
   }
 
-  renderCanvasWithImage() {
-    const canvas = this.refs.canvas;
+  renderCanvasWithImage(image) {
+    const canvas = this.canvas;
+    if (image && image.complete && image.width) {
+      this.image = image;
+    }
+
     canvas.width = this.image.width;
-    canvas.height = this.image.height;
+    canvas.height = this.image.height + this.waterMarkArea;
 
     try {
       canvas.toDataURL()
@@ -34,40 +38,41 @@ class MemeEditor extends Component {
       return this.image.src = document.location.origin + "/ie/:id".replace(":id", this.model.get("id")), !1
     }
 
-    var d = canvas.getContext("2d");
-    d.fillStyle = "white",
-    d.strokeStyle = "black",
-    d.lineWidth = 6,
-    d.textAlign = "center";
-    d.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px Nanum Gothic`;
-    d.textBaseline = 'hanging';
-    d.lineJoin="miter";
-    d.miterLimit = 2,
-    this.drawCanvas(!0)
+
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, this.image.height, canvas.width, this.image.height + this.waterMarkArea);
+    this.buildWaterMark();
+
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 6;
+    ctx.textAlign = "center";
+    ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px Nanum Gothic`;
+    ctx.textBaseline = 'hanging';
+    ctx.lineJoin="miter";
+    ctx.miterLimit = 2;
+    this.drawCanvas();
   }
 
-  drawCanvas(a) {
-    this.drawImage();
-    this.buildText(this.currentTopText, this.textType.top);
-    this.buildText(this.currentBottomText, this.textType.bottom);
+  drawCanvas(makeEmptyText) {
+    const topText = this.refs.topText.value || (makeEmptyText ? '' : 'Top text');
+    const bottomText = this.refs.bottomText.value || (makeEmptyText ? '' : 'Bottom text');
+
+    this.drawImage(this.image);
+    this.buildText(topText, this.textType.top);
+    this.buildText(bottomText, this.textType.bottom);
   }
 
-  drawImage() {
-    var canvas = this.refs.canvas;
-    canvas.getContext('2d').drawImage(this.image, 0, 0, canvas.width, canvas.height);
-  }
-
-  topTextChanged(a) {
-      this.currentTopText = this.refs.topText.value;
-      this.drawCanvas(!0)
-  }
-  bottomTextChanged(a) {
-      this.currentBottomText = this.refs.bottomText.value;
-      this.drawCanvas(!0)
+  drawImage(image) {
+    const canvas = this.canvas;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, canvas.width, this.image.height);
+    // sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
   }
 
   buildText(text, which) {
-    const canvas = this.refs.canvas;
+    const canvas = this.canvas;
     let textArr = text.split(/\r?\n/g);
     if (which === -1) {// Bottom
       textArr.reverse();
@@ -93,34 +98,28 @@ class MemeEditor extends Component {
     const fontSize = (which === -1) ?
       this.fontSizeArray[this._getValidIndex(this.bottomFontIndex + additional_fontSize)] :
       this.fontSizeArray[this._getValidIndex(this.topFontIndex + additional_fontSize)];
-
-    console.log(which, fontSize)
-
     const lineHeight = 1.2;
-
     const textList = textArr.reduce((list, item, index) => {
       list[index] = {};
       list[index].text = item;
       list[index].posX = canvas.width / 2;
       list[index].posY = (which === 1) ?
         (index * which * fontSize * lineHeight) + 20: // Top text
-        (index * which * fontSize * lineHeight) + canvas.height - fontSize - 10; // Bottom text
+        (index * which * fontSize * lineHeight) + canvas.height - fontSize - this.waterMarkArea - 10; // Bottom text
       return list;
     }, {});
 
     this._setCanvasFont(fontSize);
-    this.drawText(textList, which);
+    this.drawText(textList);
   }
 
-  _setCanvasFont(fontSize, which) {
-    const canvasContext = this.refs.canvas.getContext('2d');
+  _setCanvasFont(fontSize) {
+    const canvasContext = this.canvas.getContext('2d');
     canvasContext.font = `700 ${fontSize}px Nanum Gothic`;
   }
 
-  drawText(textList, which) {
-    const canvas = this.refs.canvas;
-    
-
+  drawText(textList) {
+    const canvas = this.canvas;
     Object.keys(textList).forEach(index => {
       canvas.getContext('2d').strokeText(
         textList[index].text,
@@ -164,7 +163,7 @@ class MemeEditor extends Component {
   }
 
   getBase64Image(img) {
-    const canvas = this.refs.canvas;
+    const canvas = this.canvas;
 
     // Get the data-URL formatted image
     // Firefox supports PNG and JPEG. You could check img.src to
@@ -175,6 +174,42 @@ class MemeEditor extends Component {
     const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     console.warn(base64);
     return base64;
+  }
+
+  readImageFromFile(input) {
+    if (input.target.files && input.target.files[0]) {
+      var FR = new FileReader();
+      FR.onload = (ev) => {
+        var img = new Image();
+        img.addEventListener("load", () => {
+          this.renderCanvasWithImage(img)
+        });
+        img.src = ev.target.result;
+      };
+      FR.readAsDataURL(input.target.files[0]);
+    }
+  }
+
+  saveImage(ev) {
+    if (!this.refs.topText.value || !this.refs.bottomText.value) {
+      this.drawCanvas(true);
+    }
+
+    const blob = dataURLtoBlob(this.canvas.toDataURL());
+    this.saveButton.href = URL.createObjectURL(blob);
+    this.saveButton.download = "myDomain.png";
+
+    if (!this.refs.topText.value || !this.refs.bottomText.value) {
+      this.drawCanvas();
+    }
+  }
+
+  buildWaterMark() {
+    const ctx = this.canvas.getContext('2d');
+    ctx.fillStyle = "#ccc";
+    ctx.textAlign = "right";
+    ctx.font = `400 18px Arial, Impact`;
+    ctx.fillText(document.location.hostname, this.canvas.width - 10, this.canvas.height - (this.waterMarkArea/3) );
   }
 
   render() {
@@ -193,26 +228,38 @@ class MemeEditor extends Component {
     this.image.setAttribute("crossOrigin", "anonymous");
 
     return (
-      <div className="blob-canvas">
-        <div className="canvas-area">
-          <canvas ref="canvas" />
+      <div className="meme-editor">
+        <div className="upload-file-area">
+          <input type="file" id="uploadFile" ref="uploadFile" accept="image/*"
+          onChange={ev => this.readImageFromFile(ev)}
+          onClick={ev => ev.target.value = null} />
         </div>
-        <div className="canvas-caption">
-          <div className="field">
-            <textarea type="text" ref="topText" placeholder="Top Text" onChange={this.topTextChanged.bind(this)}></textarea>
-            <ul className="segment-control font-size">
-              <li><button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
-              <li className="seperator"><span></span></li>
-              <li><button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
-            </ul>
+        <div className="blob-canvas">
+          <div className="canvas-area">
+            <div className="canvas-cover">
+              <canvas ref={canvas => this.canvas = canvas} />
+            </div>
           </div>
-          <div className="field">
-            <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={this.bottomTextChanged.bind(this)}></textarea>
-            <ul className="segment-control font-size">
-              <li><button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
-              <li className="seperator"><span></span></li>
-              <li><button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
-            </ul>
+          <div className="canvas-caption">
+            <div className="field">
+              <textarea type="text" ref="topText" placeholder="Top Text" onChange={() => this.drawCanvas()}></textarea>
+              <ul className="segment-control font-size">
+                <li><button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
+                <li className="seperator"><span></span></li>
+                <li><button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
+              </ul>
+            </div>
+            <div className="field">
+              <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={() => this.drawCanvas()}></textarea>
+              <ul className="segment-control font-size">
+                <li><button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
+                <li className="seperator"><span></span></li>
+                <li><button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
+              </ul>
+            </div>
+            <div className="">
+              <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>Save image</a>
+            </div>
           </div>
         </div>
       </div>

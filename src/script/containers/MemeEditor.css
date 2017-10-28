@@ -1,17 +1,21 @@
+
 .blob-canvas {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   margin: 20px 0 0;
 }
-
 .canvas-area {
-  outline: 1px solid olive;
+  overflow: hidden;
+  border: 3px dotted pink;
+}
+.canvas-cover {
+  margin-bottom: -50px;
 }
 .canvas-caption {
   margin: 0 0 0 20px;
   outline: 1px solid pink;
 }
-
 .canvas-caption .field {
   margin: 0 0 20px;
 }
