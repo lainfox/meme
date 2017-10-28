@@ -16,7 +16,10 @@ class MemeEditor extends Component {
   componentDidMount() {
     if (!this.image.complete) {
       this.image.onload = this.renderCanvasWithImage.bind(this);
+    } else {
+      this.renderCanvasWithImage()
     }
+
   }
 
   renderCanvasWithImage() {
@@ -79,9 +82,10 @@ class MemeEditor extends Component {
       break;
     case 3:
     case 4:
+    case 5:
       additional_fontSize = -1;
       break;
-    case 5:
+    case 6:
     default:
       additional_fontSize = -2;
     }
