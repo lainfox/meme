@@ -1,0 +1,11 @@
+.font-switcher {
+	margin-bottom: -16px;
+}
+
+.font-switcher label {
+	cursor: pointer;
+}
+.font-switcher label span,
+.font-switcher label div {
+	vertical-align: middle;
+}

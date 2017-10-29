@@ -18,20 +18,23 @@
 
 .canvas-caption {
   margin: 0 0 0 20px;
+  background-color: #FFF;
 }
 .canvas-caption .field {
-  margin: 0 0 20px;
+  position: relative;
+  margin: 0;
+}
+.canvas-caption .field label {
+  left: 5px;
 }
 .canvas-caption textarea {
   display: block;
-  width: 278px;
-  margin: 0 0;
-  padding: 8px 10px;
-  font: 13px/1.5 'Noto Sans KR', sans-serif;
-  height: 60px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  resize: none;
+  margin: -6px 0 -7px;
+  padding: 6px;
+  width: 270px;
+  height: 66px;
+  font: 14px/1.5 'Noto Sans KR', sans-serif;
+  background-color: rgba(0,0,0, .05);
 }
 .canvas-caption .handler-fontsize {
   text-align: right;
@@ -45,6 +48,9 @@
 }
 .canvas-caption .increase-font-size {
   font-size: 1.2em;
+}
+.canvas-caption .generate-image {
+  margin-top: 20px;
 }
 
 .divider {

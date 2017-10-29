@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import green from 'material-ui/colors/green';
 import Switch from 'material-ui/Switch';
+import './fontSwitcher.css';
 
 const styles = {
   bar: {},
@@ -33,15 +34,15 @@ class FontSwtich extends Component {
     const {fontFamily} = this.props;
 
     return (
-      <div>
+      <div className="font-switcher">
       	<label>
-	      	<span>sans serif</span>
+          <span>Sans Serif</span>
 	        <Switch
 	          checked={this.state.fontFamily}
 	          onChange={this.handleChange('fontFamily')}
 	          aria-label="fontFamily"
 	        />
-	      	<span>serif</span>
+          <span>Serif</span>
       	</label>
       </div>
     );
