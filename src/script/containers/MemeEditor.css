@@ -12,6 +12,11 @@
 .canvas-cover {
   margin-bottom: -50px;
 }
+.canvas-cover canvas {
+  width: 600px;
+  max-width: 600px;
+}
+
 .canvas-caption {
   margin: 0 0 0 20px;
   outline: 1px solid pink;

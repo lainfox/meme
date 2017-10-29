@@ -25,12 +25,14 @@ class MemeEditor extends Component {
 
   renderCanvasWithImage(image) {
     const canvas = this.canvas;
+    
     if (image && image.complete && image.width) {
       this.image = image;
     }
 
     canvas.width = this.image.width;
-    canvas.height = this.image.height + this.waterMarkArea;
+    const ratio = canvas.width / this.image.width;
+    canvas.height = (ratio * this.image.height) + this.waterMarkArea;
 
     try {
       canvas.toDataURL()
@@ -42,7 +44,7 @@ class MemeEditor extends Component {
 
     var ctx = canvas.getContext("2d");
     ctx.fillStyle = "black";
-    ctx.fillRect(0, this.image.height, canvas.width, this.image.height + this.waterMarkArea);
+    ctx.fillRect(0, canvas.height, canvas.width, canvas.height + this.waterMarkArea);
     this.buildWaterMark();
 
     ctx.fillStyle = "white";
@@ -69,7 +71,7 @@ class MemeEditor extends Component {
   drawImage(image) {
     const canvas = this.canvas;
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(image, 0, 0, canvas.width, this.image.height);
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height - this.waterMarkArea);
     // sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
   }
 
