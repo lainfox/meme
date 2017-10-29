@@ -8,31 +8,54 @@ class MemeEditor extends Component {
   constructor(props) {
     super(props);
     this.image = new Image;
+    this.image.setAttribute("crossOrigin", "anonymous");
     this.fontFamily = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
     this.fontSizeArray = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300]
     this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
     this.textType = {top: 1, bottom: -1};
     this.waterMarkArea = 40;
+    this.canvasMaxWidth = 600;
+
+
+    // CORS 에러로 안되는 이미지들
+    // const imageUrl = 'http://event.leagueoflegends.co.kr/star-guardian-2017/img/star_guardian_miss_fortune_wp.jpg';
+    // const imageUrl = 'http://www.dogdrip.net/dvs/b/i/17/10/23/78/593/888/142/b3d1fd0208c6aa79ed51862877aa6af7.jpg';
+
+    // 얘는 됨
+    // const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
+
+    // 로컬 이미지
+    // const imageUrl = '/media/welcome.png';
+    const imageUrl = '/media/test-image.jpg';
+    this.image.src = imageUrl;
   }
+
+  state = {
+    imageRatio: 1, // Can be change width canvasMaxWidth / image.width
+  };
 
   componentDidMount() {
     if (!this.image.complete) {
-      this.image.onload = this.renderCanvasWithImage.bind(this);
+      this.image.onload = () => this.renderCanvasWithImage();
     } else {
       this.renderCanvasWithImage()
     }
   }
 
-  renderCanvasWithImage(image) {
+  renderCanvasWithImage(newImage) {
     const canvas = this.canvas;
-    
-    if (image && image.complete && image.width) {
-      this.image = image;
+
+    if (newImage && newImage.complete && newImage.width) {
+      this.image = newImage;
     }
 
     canvas.width = this.image.width;
-    const ratio = canvas.width / this.image.width;
-    canvas.height = (ratio * this.image.height) + this.waterMarkArea;
+    canvas.height = this.image.height + this.waterMarkArea;
+    
+    const currImageRatio = this.canvasMaxWidth / this.image.width;
+    if (this.state.imageRatio !== currImageRatio) {
+      this.setState({imageRatio: currImageRatio});
+    }
 
     try {
       canvas.toDataURL()
@@ -43,15 +66,16 @@ class MemeEditor extends Component {
 
 
     var ctx = canvas.getContext("2d");
+
+    // WaterMark Area
     ctx.fillStyle = "black";
-    ctx.fillRect(0, canvas.height, canvas.width, canvas.height + this.waterMarkArea);
+    ctx.fillRect(0, this.image.height, canvas.width, canvas.height);
     this.buildWaterMark();
 
     ctx.fillStyle = "white";
     ctx.strokeStyle = "black";
     ctx.lineWidth = 6;
     ctx.textAlign = "center";
-    // ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px 'Noto Sans KR'`;
     ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px ${this.fontFamily}`;
     ctx.textBaseline = 'alphabetic';
     ctx.lineJoin="miter";
@@ -102,14 +126,13 @@ class MemeEditor extends Component {
     const fontSize = (which === -1) ?
       this.fontSizeArray[this._getValidIndex(this.bottomFontIndex + additional_fontSize)] :
       this.fontSizeArray[this._getValidIndex(this.topFontIndex + additional_fontSize)];
-    const lineHeight = 1.2;
     const textList = textArr.reduce((list, item, index) => {
       list[index] = {};
       list[index].text = item;
       list[index].posX = canvas.width / 2;
       list[index].posY = (which === 1) ?
-        (index * which * fontSize * lineHeight) + 20: // Top text
-        (index * which * fontSize * lineHeight) + canvas.height - fontSize - this.waterMarkArea - 10; // Bottom text
+        (index * which * fontSize ) + fontSize: // Top text
+        (index * which * fontSize) + canvas.height - this.waterMarkArea - fontSize  - 10; // Bottom text
       return list;
     }, {});
 
@@ -184,11 +207,12 @@ class MemeEditor extends Component {
     if (input.target.files && input.target.files[0]) {
       var FR = new FileReader();
       FR.onload = (ev) => {
-        var img = new Image();
-        img.addEventListener("load", () => {
-          this.renderCanvasWithImage(img)
+        var newImage = new Image();
+        newImage.addEventListener("load", () => {
+          console.log(newImage, newImage.width)
+          this.renderCanvasWithImage(newImage);
         });
-        img.src = ev.target.result;
+        newImage.src = ev.target.result;
       };
       FR.readAsDataURL(input.target.files[0]);
     }
@@ -201,7 +225,7 @@ class MemeEditor extends Component {
 
     const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg'));
     this.saveButton.href = URL.createObjectURL(blob);
-    this.saveButton.download = "myDomain.png";
+    this.saveButton.download = "myDomain.jpg";
 
     if (!this.refs.topText.value || !this.refs.bottomText.value) {
       this.drawCanvas();
@@ -224,19 +248,7 @@ class MemeEditor extends Component {
   }
 
   render() {
-    // CORS 에러로 안되는 이미지들
-    // const imageUrl = 'http://event.leagueoflegends.co.kr/star-guardian-2017/img/star_guardian_miss_fortune_wp.jpg';
-    // const imageUrl = 'http://www.dogdrip.net/dvs/b/i/17/10/23/78/593/888/142/b3d1fd0208c6aa79ed51862877aa6af7.jpg';
-
-    // 얘는 됨
-    // const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
-
-    // 로컬 이미지
-    // const imageUrl = '/media/welcome.png';
-    const imageUrl = '/media/test-image.jpg';
-
-    this.image.src = imageUrl;
-    this.image.setAttribute("crossOrigin", "anonymous");
+    const watermarkMargin = -1 * this.state.imageRatio * this.waterMarkArea;
 
     return (
       <div className="meme-editor">
@@ -247,7 +259,7 @@ class MemeEditor extends Component {
         </div>
         <div className="blob-canvas">
           <div className="canvas-area">
-            <div className="canvas-cover">
+            <div className="canvas-cover" style={{marginBottom: `${watermarkMargin}px`}}>
               <canvas ref={canvas => this.canvas = canvas} />
             </div>
           </div>
