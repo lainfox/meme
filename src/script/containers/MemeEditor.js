@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
 import FontSwitch from '../components/FontSwitch'
+import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import './MemeEditor.css';
 
@@ -84,8 +85,8 @@ class MemeEditor extends Component {
   }
 
   drawCanvas(makeEmptyText) {
-    const topText = this.refs.topText.value || (makeEmptyText ? '' : 'Top text');
-    const bottomText = this.refs.bottomText.value || (makeEmptyText ? '' : 'Bottom text');
+    const topText = this.topText.value || (makeEmptyText ? '' : 'Top text');
+    const bottomText = this.bottomText.value || (makeEmptyText ? '' : 'Bottom text');
 
     this.drawImage(this.image);
     this.buildText(topText, this.textType.top);
@@ -131,8 +132,8 @@ class MemeEditor extends Component {
       list[index].text = item;
       list[index].posX = canvas.width / 2;
       list[index].posY = (which === 1) ?
-        (index * which * fontSize ) + fontSize: // Top text
-        (index * which * fontSize) + canvas.height - this.waterMarkArea - fontSize  - 10; // Bottom text
+        (index * which * fontSize ) + 15 + fontSize - (fontSize * 0.18): // Top text
+        (index * which * fontSize) + canvas.height - this.waterMarkArea - 15 - (fontSize * 0.18); // Bottom text
       return list;
     }, {});
 
@@ -219,7 +220,7 @@ class MemeEditor extends Component {
   }
 
   saveImage(ev) {
-    if (!this.refs.topText.value || !this.refs.bottomText.value) {
+    if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
     }
 
@@ -227,7 +228,7 @@ class MemeEditor extends Component {
     this.saveButton.href = URL.createObjectURL(blob);
     this.saveButton.download = "myDomain.jpg";
 
-    if (!this.refs.topText.value || !this.refs.bottomText.value) {
+    if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas();
     }
   }
@@ -266,7 +267,8 @@ class MemeEditor extends Component {
           <div className="canvas-caption">
             <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
             <div className="field">
-              <textarea type="text" ref="topText" placeholder="Top Text" onChange={() => this.drawCanvas()}></textarea>
+              <TextField label="Top Text" inputRef={input => this.topText = input} multiline rows="4" margin="normal"
+                onChange={() => this.drawCanvas()} />
               <div className="handler-fontsize">
                 <Button dense ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}>
                   <span className="decrease-font-size">A</span>
@@ -278,7 +280,8 @@ class MemeEditor extends Component {
               </div>
             </div>
             <div className="field">
-              <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={() => this.drawCanvas()}></textarea>
+              <TextField label="Bottom Text" inputRef={input => this.bottomText = input} multiline rows="4" margin="normal"
+                onChange={() => this.drawCanvas()} />
               <div className="handler-fontsize">
                 <Button dense ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}>
                   <span className="decrease-font-size">A</span>
@@ -289,8 +292,12 @@ class MemeEditor extends Component {
                 </Button>
               </div>
             </div>
-            <div className="">
-              <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>Save image</a>
+            <div className="generate-image">
+              <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
+                <Button raised color="accent">
+                Save image
+                </Button>
+              </a>
             </div>
           </div>
         </div>
