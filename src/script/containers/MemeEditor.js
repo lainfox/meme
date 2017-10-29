@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
+import FontSwitch from '../components/FontSwitch'
+import Button from 'material-ui/Button';
 import './MemeEditor.css';
 
 class MemeEditor extends Component {
   constructor(props) {
     super(props);
     this.image = new Image;
-    this.fontSizeArray = [20,30,40,50,60,70,80,90]
+    this.fontFamily = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
+    this.fontSizeArray = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300]
     this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
-    this.currentTopText = 'Top text';
-    this.currentBottomText = 'Bottom text';
     this.textType = {top: 1, bottom: -1};
     this.waterMarkArea = 40;
   }
@@ -48,8 +49,9 @@ class MemeEditor extends Component {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 6;
     ctx.textAlign = "center";
-    ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px Nanum Gothic`;
-    ctx.textBaseline = 'hanging';
+    // ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px 'Noto Sans KR'`;
+    ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px ${this.fontFamily}`;
+    ctx.textBaseline = 'alphabetic';
     ctx.lineJoin="miter";
     ctx.miterLimit = 2;
     this.drawCanvas();
@@ -115,7 +117,7 @@ class MemeEditor extends Component {
 
   _setCanvasFont(fontSize) {
     const canvasContext = this.canvas.getContext('2d');
-    canvasContext.font = `700 ${fontSize}px Nanum Gothic`;
+    canvasContext.font = `700 ${fontSize}px ${this.fontFamily}`;
   }
 
   drawText(textList) {
@@ -212,6 +214,13 @@ class MemeEditor extends Component {
     ctx.fillText(document.location.hostname, this.canvas.width - 10, this.canvas.height - (this.waterMarkArea/3) );
   }
 
+  _setFontFamily(isSerifFont) {
+    this.fontFamily = (isSerifFont) ?
+      `gungsuh, 'Droid Serif', serif` :
+      'Noto Sans KR';
+    this.drawCanvas();
+  }
+
   render() {
     // CORS 에러로 안되는 이미지들
     // const imageUrl = 'http://event.leagueoflegends.co.kr/star-guardian-2017/img/star_guardian_miss_fortune_wp.jpg';
@@ -241,20 +250,21 @@ class MemeEditor extends Component {
             </div>
           </div>
           <div className="canvas-caption">
+            <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
             <div className="field">
               <textarea type="text" ref="topText" placeholder="Top Text" onChange={() => this.drawCanvas()}></textarea>
               <ul className="segment-control font-size">
-                <li><button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
+                <li><Button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}><span className="decrease-font-size">Decrease font size</span></Button></li>
                 <li className="seperator"><span></span></li>
-                <li><button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
+                <li><Button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}><span className="increase-font-size">Increase font size</span></Button></li>
               </ul>
             </div>
             <div className="field">
               <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={() => this.drawCanvas()}></textarea>
               <ul className="segment-control font-size">
-                <li><button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}><span className="decrease-font-size">Decrease font size</span></button></li>
+                <li><Button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}><span className="decrease-font-size">Decrease font size</span></Button></li>
                 <li className="seperator"><span></span></li>
-                <li><button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}><span className="increase-font-size">Increase font size</span></button></li>
+                <li><Button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}><span className="increase-font-size">Increase font size</span></Button></li>
               </ul>
             </div>
             <div className="">
