@@ -267,19 +267,27 @@ class MemeEditor extends Component {
             <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
             <div className="field">
               <textarea type="text" ref="topText" placeholder="Top Text" onChange={() => this.drawCanvas()}></textarea>
-              <ul className="segment-control font-size">
-                <li><Button ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}><span className="decrease-font-size">Decrease font size</span></Button></li>
-                <li className="seperator"><span></span></li>
-                <li><Button ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}><span className="increase-font-size">Increase font size</span></Button></li>
-              </ul>
+              <div className="handler-fontsize">
+                <Button dense ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}>
+                  <span className="decrease-font-size">A</span>
+                </Button>
+                <span className="divider"></span>
+                <Button dense ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}>
+                  <span className="increase-font-size">A</span>
+                </Button>
+              </div>
             </div>
             <div className="field">
               <textarea type="text" ref="bottomText" placeholder="Bottom text" onChange={() => this.drawCanvas()}></textarea>
-              <ul className="segment-control font-size">
-                <li><Button ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}><span className="decrease-font-size">Decrease font size</span></Button></li>
-                <li className="seperator"><span></span></li>
-                <li><Button ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}><span className="increase-font-size">Increase font size</span></Button></li>
-              </ul>
+              <div className="handler-fontsize">
+                <Button dense ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}>
+                  <span className="decrease-font-size">A</span>
+                </Button>
+                <span className="divider"></span>
+                <Button dense ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}>
+                  <span className="increase-font-size">A</span>
+                </Button>
+              </div>
             </div>
             <div className="">
               <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>Save image</a>

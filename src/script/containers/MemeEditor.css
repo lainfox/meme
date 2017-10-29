@@ -18,19 +18,41 @@
 
 .canvas-caption {
   margin: 0 0 0 20px;
-  outline: 1px solid pink;
 }
 .canvas-caption .field {
   margin: 0 0 20px;
 }
 .canvas-caption textarea {
+  display: block;
   width: 278px;
   margin: 0 0;
-
-  resize: none;
-  font: 13px/20px "Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;
+  padding: 8px 10px;
+  font: 13px/1.5 'Noto Sans KR', sans-serif;
   height: 60px;
   background-color: #fff;
   border: 1px solid #ddd;
-  padding: 8px 10px;
+  resize: none;
 }
+.canvas-caption .handler-fontsize {
+  text-align: right;
+}
+.canvas-caption .handler-fontsize button {
+  min-width: 36px;
+  vertical-align: middle;
+}
+.canvas-caption .decrease-font-size {
+  font-size: .8em;
+}
+.canvas-caption .increase-font-size {
+  font-size: 1.2em;
+}
+
+.divider {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 -1px;
+  width: 1px;
+  height: 16px;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
