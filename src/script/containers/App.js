@@ -12,8 +12,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React!!</h1>
           <Link to="/">Home</Link>
-          <Link to="/about-us">About</Link>
-          <Link to="/hello/2">Hello</Link>
+          <Link to="/create/welcome">welcome</Link>
         </header>
         {routes}
       </div>
