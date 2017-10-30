@@ -253,6 +253,7 @@ class MemeEditor extends Component {
 
     return (
       <div className="meme-editor">
+        <h1>{this.props.match.params.memeId}</h1>
         <div className="upload-file-area">
           <input type="file" id="uploadFile" ref="uploadFile" accept="image/*"
           onChange={ev => this.readImageFromFile(ev)}

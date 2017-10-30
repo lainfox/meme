@@ -24,10 +24,9 @@ export default (
   <main>
     <Switch>
       <Route exact path='/' component={Home}/>
-      {/* both /roster and /roster/:number begin with /roster */}
-      <Route path='/hello/:number' component={MemeEditor}/>
+      {/* <Route exact path='/create' component={MemeEditor}/> */}
+      <Route path='/create/:memeId' component={MemeEditor}/>
       <Route path='/about-us' component={About}/>
-      {/*<Route path='/schedule' component={Schedule}/>*/}
     </Switch>
   </main>
 )
