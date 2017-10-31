@@ -1,15 +1,33 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
 import FontSwitch from '../components/FontSwitch'
+import Upload from '../components/Upload'
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import './MemeEditor.css';
 
+// CORS 에러로 안되는 이미지들
+// const imageUrl = 'http://event.leagueoflegends.co.kr/star-guardian-2017/img/star_guardian_miss_fortune_wp.jpg';
+// const imageUrl = 'http://www.dogdrip.net/dvs/b/i/17/10/23/78/593/888/142/b3d1fd0208c6aa79ed51862877aa6af7.jpg';
+
+// 얘는 됨
+// const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
+
+
 class MemeEditor extends Component {
+  static propTypes = {
+    item: PropTypes.object.isRequired,
+    ratio: PropTypes.number.isRequired,
+  };
+
   constructor(props) {
     super(props);
+
     this.image = new Image;
     this.image.setAttribute("crossOrigin", "anonymous");
+    this.image.src = props.item.image;
+
     this.fontFamily = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
     this.fontSizeArray = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300]
     this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
@@ -17,25 +35,23 @@ class MemeEditor extends Component {
     this.waterMarkArea = 40;
     this.canvasMaxWidth = 600;
 
-
-    // CORS 에러로 안되는 이미지들
-    // const imageUrl = 'http://event.leagueoflegends.co.kr/star-guardian-2017/img/star_guardian_miss_fortune_wp.jpg';
-    // const imageUrl = 'http://www.dogdrip.net/dvs/b/i/17/10/23/78/593/888/142/b3d1fd0208c6aa79ed51862877aa6af7.jpg';
-
-    // 얘는 됨
-    // const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
-
-    // 로컬 이미지
-    // const imageUrl = '/media/welcome.png';
-    const imageUrl = '/media/test-image.jpg';
-    this.image.src = imageUrl;
+    this.state = {
+      ratio: props.ratio
+    }
   }
 
-  state = {
-    imageRatio: 1, // Can be change width canvasMaxWidth / image.width
-  };
+  componentWillReceiveProps(nextProps) {
+    if (this.props.item.image !== nextProps.item.image) {
+      this.image.src = nextProps.item.image
+    }
+    this._imageLoadedTrigger()
+  }
 
   componentDidMount() {
+    this._imageLoadedTrigger()
+  }
+
+  _imageLoadedTrigger() {
     if (!this.image.complete) {
       this.image.onload = () => this.renderCanvasWithImage();
     } else {
@@ -53,16 +69,16 @@ class MemeEditor extends Component {
     canvas.width = this.image.width;
     canvas.height = this.image.height + this.waterMarkArea;
     
-    const currImageRatio = this.canvasMaxWidth / this.image.width;
-    if (this.state.imageRatio !== currImageRatio) {
-      this.setState({imageRatio: currImageRatio});
+    const newRatio = this.canvasMaxWidth / this.image.width;
+    if (this.state.ratio !== newRatio) {
+      this.setState({ratio: newRatio});
     }
 
     try {
       canvas.toDataURL()
     } 
     catch (c) {
-      return this.image.src = document.location.origin + "/ie/:id".replace(":id", this.model.get("id")), !1
+      return this.image.src = this.props.item.image, false;
     }
 
 
@@ -190,20 +206,6 @@ class MemeEditor extends Component {
     }
   }
 
-  getBase64Image(img) {
-    const canvas = this.canvas;
-
-    // Get the data-URL formatted image
-    // Firefox supports PNG and JPEG. You could check img.src to
-    // guess the original format, but be aware the using "image/jpg"
-    // will re-encode the image.
-    const dataURL = canvas.toDataURL();
-
-    const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-    console.warn(base64);
-    return base64;
-  }
-
   readImageFromFile(input) {
     if (input.target.files && input.target.files[0]) {
       var FR = new FileReader();
@@ -220,13 +222,15 @@ class MemeEditor extends Component {
   }
 
   saveImage(ev) {
+    const fileName = this.props.item.id;
+    
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
     }
 
     const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg'));
     this.saveButton.href = URL.createObjectURL(blob);
-    this.saveButton.download = "myDomain.jpg";
+    this.saveButton.download = fileName;
 
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas();
@@ -248,17 +252,39 @@ class MemeEditor extends Component {
     this.drawCanvas();
   }
 
+  // getBase64Image(img) {
+  //   const canvas = this.canvas;
+
+  //   // Get the data-URL formatted image
+  //   // Firefox supports PNG and JPEG. You could check img.src to
+  //   // guess the original format, but be aware the using "image/jpg"
+  //   // will re-encode the image.
+  //   const dataURL = canvas.toDataURL();
+
+  //   const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+  //   console.warn(base64);
+  //   return base64;
+  // }
+  // 
+  // 
+
   render() {
-    const watermarkMargin = -1 * this.state.imageRatio * this.waterMarkArea;
+    const {item} = this.props;
+    const isNew = item.id === 'New MEME';
+
+    // Should be re-render with ratio
+    const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
 
     return (
       <div className="meme-editor">
-        <h1>{this.props.match.params.memeId}</h1>
+        <h1>{item.memeId}</h1>
+
+        {isNew &&
         <div className="upload-file-area">
-          <input type="file" id="uploadFile" ref="uploadFile" accept="image/*"
-          onChange={ev => this.readImageFromFile(ev)}
-          onClick={ev => ev.target.value = null} />
+          <Upload ref="uploadFile" onChangeFunc={ev => this.readImageFromFile(ev)} />
         </div>
+        }
+
         <div className="blob-canvas">
           <div className="canvas-area">
             <div className="canvas-cover" style={{marginBottom: `${watermarkMargin}px`}}>
