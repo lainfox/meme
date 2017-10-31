@@ -1,12 +1,13 @@
 import {routerReducer as routing} from "react-router-redux";
 import {combineReducers} from 'redux'
-import menuBar from "./menuBar";
+import {list, categoryFilter} from "./list";
 import counter from "./counter";
 
 // const rootReducer = {
 const rootReducer = combineReducers({
   routing,
-  menuBar,
+  list,
+  categoryFilter,
   counter,
 })
 
