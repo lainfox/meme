@@ -271,14 +271,11 @@ class MemeEditor extends Component {
   render() {
     const {item} = this.props;
     const isNew = item.id === 'New MEME';
-
     // Should be re-render with ratio
     const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
 
     return (
       <div className="meme-editor">
-        <h1>{item.memeId}</h1>
-
         {isNew &&
         <div className="upload-file-area">
           <Upload ref="uploadFile" onChangeFunc={ev => this.readImageFromFile(ev)} />

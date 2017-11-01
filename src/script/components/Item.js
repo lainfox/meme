@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
+import './item.css';
 
 const Item = ({ id, image, category }) => (
-  <li>
-    <Link to={`/create/${id}`}>
-      <img src={image} />
+  <li className="list-item" style={{backgroundImage: `url(${image})`}}>
+    <Link to={`/create/${id}`} className="item-anchor">
+      <span className="item-id">{id}</span>
     </Link>
   </li>
 )

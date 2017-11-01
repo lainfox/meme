@@ -12,10 +12,11 @@ class Create extends PureComponent {
   render() {
     const {item} = this.props;
     const ratio = CANVAS_WIDTH / item.width;
-
+    const memeTitle = item.id.replace(/\-/g, ' ');
+    
     return (
       <div>
-        <h1>{item.id}</h1>
+        <h1>{memeTitle}</h1>
         <MemeEditor item={item} ratio={ratio} />
       </div>
     );
