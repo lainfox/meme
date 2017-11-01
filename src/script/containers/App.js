@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
 import {Link} from 'react-router-dom'
 import routes from '../config/routes';
+import Upload from '../components/Upload';
 import logo from './logo.svg';
 import './App.css';
 
@@ -9,10 +11,8 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React!!</h1>
-          <Link to="/">Home</Link>
-          <Link to="/create">Create</Link>
+          <Link to="/"><img src={logo} className="App-logo" alt="logo" /></Link>
+          <Upload ref="uploadFile" />
         </header>
         {routes}
       </div>
@@ -20,14 +20,4 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {}
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatch: dispatch
-  }
-}
-
-export default App;
+export default App

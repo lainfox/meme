@@ -6,18 +6,18 @@ const CANVAS_WIDTH = 600;
 
 class Create extends PureComponent {
   static propTypes = {
-    item: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired
   };
 
   render() {
-    const {item} = this.props;
+    const {item, uploadFile, dispatch} = this.props;
     const ratio = CANVAS_WIDTH / item.width;
     const memeTitle = item.id.replace(/\-/g, ' ');
-    
+
     return (
       <div>
         <h1>{memeTitle}</h1>
-        <MemeEditor item={item} ratio={ratio} />
+        <MemeEditor item={item} uploadFile={uploadFile} ratio={ratio} dispatch={dispatch} />
       </div>
     );
   }
