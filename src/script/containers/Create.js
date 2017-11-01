@@ -5,13 +5,14 @@ const mapStateToProps = (state, ownProps) => {
   const memeId = ownProps.match.params.memeId;
   const item = state.list.filter(item => item.id === memeId)[0] || {
     id: 'New MEME',
-    image: '/media/new.jpg',
+    image: '',
     width: 600,
     height: 600,
     category: ''
   };
   
   return {
+    uploadFile: state.upload.file,
     item
   }
 }

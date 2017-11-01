@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {push} from 'react-router-redux'
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
+import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
 import Upload from '../components/Upload'
 import TextField from 'material-ui/TextField';
@@ -18,6 +20,7 @@ import './MemeEditor.css';
 class MemeEditor extends Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
+    uploadFile: PropTypes.string,
     ratio: PropTypes.number.isRequired,
   };
 
@@ -41,14 +44,31 @@ class MemeEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.item.image !== nextProps.item.image) {
+    if (!this.props.item.image && !nextProps.item.image && !nextProps.uploadFile) {
+      return false;
+    }
+
+    if (nextProps.uploadFile && !nextProps.item.image) {
+      this.image.src = nextProps.uploadFile;
+    }
+    else if (this.props.item.image !== nextProps.item.image) {
       this.image.src = nextProps.item.image
     }
-    this._imageLoadedTrigger()
+    this._imageLoadedTrigger();
   }
 
   componentDidMount() {
     this._imageLoadedTrigger()
+  }
+  componentWillUnmount() {
+    this.props.dispatch(resetFile());
+  }
+  shouldComponentUpdate(nextProps, nextState){
+    if (nextProps.uploadFile) {
+      return true
+    } else {
+      return false
+    }
   }
 
   _imageLoadedTrigger() {
@@ -212,8 +232,9 @@ class MemeEditor extends Component {
       FR.onload = (ev) => {
         var newImage = new Image();
         newImage.addEventListener("load", () => {
-          console.log(newImage, newImage.width)
+          // console.log(newImage, newImage.width)
           this.renderCanvasWithImage(newImage);
+          this.props.dispatch(push('/create'))
         });
         newImage.src = ev.target.result;
       };
@@ -270,17 +291,16 @@ class MemeEditor extends Component {
 
   render() {
     const {item} = this.props;
-    const isNew = item.id === 'New MEME';
+    // const isNew = item.id === 'New MEME';
     // Should be re-render with ratio
     const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
 
     return (
       <div className="meme-editor">
-        {isNew &&
+
         <div className="upload-file-area">
-          <Upload ref="uploadFile" onChangeFunc={ev => this.readImageFromFile(ev)} />
+          {/*<Upload ref="uploadFile" onChangeFunc={ev => this.readImageFromFile(ev)} />*/}
         </div>
-        }
 
         <div className="blob-canvas">
           <div className="canvas-area">
