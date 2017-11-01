@@ -1,23 +1,18 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom'
 import Item from './Item';
+import './list.css';
 
-class List extends Component {
-  static propTypes = {
-    list: PropTypes.array,
-  };
+const List = ({list}) => (
+  <ul className="list">
+    {list.map(item => 
+      <Item key={item.id} {...item} />
+    )}
+  </ul>
+)
 
-  render() {
-    const {list} = this.props;
-    return (
-      <ul className="list">
-        {list.map(item => 
-          <Item key={item.id} {...item} />
-        )}
-      </ul>
-    );
-  }
+List.propTypes = {
+  list: PropTypes.array.isRequired
 }
 
 export default List;

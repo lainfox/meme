@@ -1,0 +1,26 @@
+.list-item {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+  padding: 0;
+  width: 150px;
+  height: 150px;
+
+  background-size: cover;
+}
+
+.item-anchor {
+  display: block;
+  height: 100%;
+}
+
+.item-id {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 4px;
+  line-height: 1.2;
+  color: #FFF;
+  background-color: rgba(0,0,0,.25);
+}
+
+
