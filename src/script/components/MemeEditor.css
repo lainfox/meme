@@ -1,7 +1,7 @@
 
 .blob-canvas {
   display: flex;
-  justify-content: center;
+  /*justify-content: center;*/
   align-items: flex-start;
   margin: 20px 0 0;
 }
@@ -51,6 +51,9 @@
 }
 .canvas-caption .generate-image {
   margin-top: 20px;
+}
+.canvas-caption .full-button {
+  width: 100%;
 }
 
 .divider {
