@@ -9,8 +9,10 @@
   overflow: hidden;
 }
 .canvas-cover {
+  position: relative;
 }
 .canvas-cover canvas {
+  position: relative;
   display: block;
   width: 600px;
   max-width: 600px;

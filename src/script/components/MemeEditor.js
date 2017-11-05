@@ -4,6 +4,7 @@ import {push} from 'react-router-redux'
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
 import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
+import {CircularProgress} from 'material-ui/Progress';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import './MemeEditor.css';
@@ -295,14 +296,10 @@ class MemeEditor extends Component {
 
     return (
       <div className="meme-editor">
-
-        <div className="upload-file-area">
-          {/*<Upload ref="uploadFile" onChangeFunc={ev => this.readImageFromFile(ev)} />*/}
-        </div>
-
         <div className="blob-canvas">
           <div className="canvas-area">
             <div className="canvas-cover" style={{marginBottom: `${watermarkMargin}px`}}>
+              <CircularProgress style={{ position: 'absolute', left: '50%', margin: '40px 0 0 -20px', color: 'grey' }} />
               <canvas ref={canvas => this.canvas = canvas} />
             </div>
           </div>
