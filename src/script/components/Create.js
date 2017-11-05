@@ -10,19 +10,10 @@ class Create extends Component {
     item: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     uploadFile: PropTypes.string,
-    location: PropTypes.string,
   };
 
-  shouldComponentUpdate(nextProps, nextState){
-    if (this.props.location !== nextProps.location) {
-      return true
-    } else {
-      return false
-    }
-  }
-
   render() {
-    const {item, uploadFile, location, dispatch} = this.props;
+    const {item, uploadFile, dispatch} = this.props;
     const ratio = CANVAS_WIDTH / item.width;
     const memeTitle = item.id.replace(/-/g, ' ');
 

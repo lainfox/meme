@@ -1,7 +1,6 @@
 import React from "react";
 import {Route} from "react-router";
 import {Switch} from "react-router-dom";
-import Home from '../containers/Home'
 import List from '../containers/List'
 import About from '../containers/About'
 import Create from '../containers/Create';
