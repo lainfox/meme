@@ -1,3 +1,7 @@
+// 더이상 이녀석 안쓸거 같아. firebase database 로 대체하고 있으니
+// 나중에 생각해 그대로 놔둘지 말지 생각해보자.
+
+
 import {
   FETCH_LIST,
   SET_CATEGORY_FILTER,

@@ -3,13 +3,19 @@ import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import './item.css';
 
-const Item = ({ id, image, category }) => (
-  <li className="list-item" style={{backgroundImage: `url(${image})`}}>
-    <Link to={`/create/${id}`} className="item-anchor">
-      <span className="item-id">{id}</span>
-    </Link>
-  </li>
-)
+const Item = ({firebase, id, image, category }) => {
+	// console.warn(firebase.storage())
+	// var imageRef = firebase.storage().refFromURL(image).getDownloadURL()
+	// console.warn(imageRef)
+
+	return (
+	  <li className="list-item" style={{backgroundImage: `url(${image})`}}>
+	    <Link to={`/create/${id}`} className="item-anchor">
+	      <span className="item-id">{id}</span>
+	    </Link>
+	  </li>
+	)
+}
 
 Item.propTypes = {
   id: PropTypes.string.isRequired,
