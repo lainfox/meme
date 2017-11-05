@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Item from './Item';
 import {getFirebase } from 'react-redux-firebase'
 import { CircularProgress } from 'material-ui/Progress';
+import Adsense from '../components/Adsense';
+import Item from './Item';
 import './list.css';
 
 const List = ({memes, firebase}) => {
@@ -15,11 +16,14 @@ const List = ({memes, firebase}) => {
 	}
 
 	return (
-	  <ul className="list">
-	    {memes.map(item => 
-	      <Item key={item.id} firebase={firebase} {...item} />
-	    )}
-	  </ul>
+		<div className="container">
+			<Adsense client="ca-pub-7679582849263204" slot="9204057594" />
+		  <ul className="list">
+		    {memes.map(item => 
+		      <Item key={item.id} firebase={firebase} {...item} />
+		    )}
+		  </ul>
+		</div>
 	)
 }
 
