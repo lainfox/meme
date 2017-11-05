@@ -338,7 +338,7 @@ class MemeEditor extends Component {
             </div>
             <div className="generate-image">
               <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
-                <Button raised color="accent">
+                <Button raised color="accent" className="full-button">
                 Save image
                 </Button>
               </a>

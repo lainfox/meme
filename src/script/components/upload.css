@@ -1,5 +1,6 @@
 .upload-component {
   position: relative;
+  display: inline-block;
 }
 .upload-input {
   position: absolute;

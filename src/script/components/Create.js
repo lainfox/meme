@@ -15,7 +15,7 @@ class Create extends PureComponent {
     const memeTitle = item.id.replace(/\-/g, ' ');
 
     return (
-      <div>
+      <div className="create-component">
         <h1>{memeTitle}</h1>
         <MemeEditor item={item} uploadFile={uploadFile} ratio={ratio} dispatch={dispatch} />
       </div>
