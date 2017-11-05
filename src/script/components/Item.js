@@ -7,7 +7,7 @@ const Item = ({firebase, id, image, category }) => {
 	// console.warn(firebase.storage())
 	// var imageRef = firebase.storage().refFromURL(image).getDownloadURL()
 	// console.warn(imageRef)
-	const memeTitle = id.replace(/\-/g, ' ');
+	const memeTitle = id.replace(/-/g, ' ');
 
 	return (
 	  <li className="list-item" style={{backgroundImage: `url(${image})`}}>

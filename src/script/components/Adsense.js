@@ -9,11 +9,6 @@ class Adsense extends Component {
 	  slot: PropTypes.string.isRequired
 	}
 
-	// This code is ran when the component mounts
-  // componentDidMount() {
-  //   (window.adsbygoogle = window.adsbygoogle || []).push({});
-  // }
-
   render() {
   	const {client, slot} = this.props;
     return (

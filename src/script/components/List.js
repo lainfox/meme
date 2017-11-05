@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {getFirebase } from 'react-redux-firebase'
 import { CircularProgress } from 'material-ui/Progress';
