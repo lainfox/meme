@@ -1,18 +1,12 @@
 import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Link} from 'react-router-dom'
 import Button from 'material-ui/Button';
 import {upload} from '../actions/upload';
 import './upload.css';
 
 import {push} from 'react-router-redux'
 
-
 class Upload extends PureComponent {
-  static propTypes = {
-  };
-
   triggerClick() {
     this.inputFile.click();
   }
@@ -35,7 +29,6 @@ class Upload extends PureComponent {
   }
 
   render() {
-    const {onChangeFunc} = this.props;
     return (
       <div className="upload-component">
         <Button raised color="accent" onClick={() => this.triggerClick()}>Upload new image</Button>
@@ -49,7 +42,6 @@ class Upload extends PureComponent {
 
 const mapStateToProps = state => {
   return {
-    uploadFile: state.upload
   }
 }
 

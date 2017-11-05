@@ -13,7 +13,6 @@ const mapStateToProps = (state, ownProps) => {
   
   return {
     uploadFile: state.upload.file,
-    location: ownProps.match.url,
     item
   }
 }

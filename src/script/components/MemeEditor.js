@@ -26,7 +26,7 @@ class MemeEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.image = new Image;
+    this.image = new Image();
     this.image.setAttribute("crossOrigin", "anonymous");
     this.image.src = props.item.image;
 
@@ -201,7 +201,7 @@ class MemeEditor extends Component {
 
   setFontSize(which, index, doDrawCanvas) {
     // this.fontDefaultIndex = this.fontDefaultIndex + size;
-    this.fontSizeArray
+    // this.fontSizeArray
     if (which === 'top' || which === 1) {
       this.topFontIndex = this.topFontIndex + index;
       this.topFontIndex = this._getValidIndex(this.topFontIndex);
@@ -289,7 +289,6 @@ class MemeEditor extends Component {
   // 
 
   render() {
-    const {item} = this.props;
     // const isNew = item.id === 'New MEME';
     // Should be re-render with ratio
     const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getFirebase } from 'react-redux-firebase'
-import { CircularProgress } from 'material-ui/Progress';
+import {CircularProgress} from 'material-ui/Progress';
 import Adsense from '../components/Adsense';
 import Item from './Item';
 import './list.css';

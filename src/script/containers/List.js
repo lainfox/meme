@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import { firebaseConnect, isLoaded, isEmpty, dataToJS } from 'react-redux-firebase'
+import {firebaseConnect, dataToJS} from 'react-redux-firebase'
 import List from "../components/List";
 
 const wrappedList = firebaseConnect([
