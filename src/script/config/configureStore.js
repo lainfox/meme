@@ -20,20 +20,20 @@ const reduxFirebaseConfig = { userProfile: 'users' }
 
 const initialState = {}
 const enhancers = []
-const loggerMiddleware = createLogger()
+// const loggerMiddleware = createLogger()
 const middleware = [
   thunkMiddleware,
-  loggerMiddleware,
+  // loggerMiddleware,
   routerMiddleware(history)
 ]
 
-if (process.env.NODE_ENV === 'development') {
-  const devToolsExtension = window.devToolsExtension
+// if (process.env.NODE_ENV === 'development') {
+//   const devToolsExtension = window.devToolsExtension
 
-  if (typeof devToolsExtension === 'function') {
-    enhancers.push(devToolsExtension())
-  }
-}
+//   if (typeof devToolsExtension === 'function') {
+//     enhancers.push(devToolsExtension())
+//   }
+// }
 
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(

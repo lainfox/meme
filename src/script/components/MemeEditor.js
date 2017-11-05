@@ -4,7 +4,6 @@ import {push} from 'react-router-redux'
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
 import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
-import Upload from '../components/Upload'
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import './MemeEditor.css';

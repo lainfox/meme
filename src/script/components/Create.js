@@ -1,19 +1,30 @@
-import React, {PureComponent} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Adsense from '../components/Adsense';
 import MemeEditor from './MemeEditor';
 
 const CANVAS_WIDTH = 600;
 
-class Create extends PureComponent {
+class Create extends Component {
   static propTypes = {
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    uploadFile: PropTypes.string,
+    location: PropTypes.string,
   };
 
+  shouldComponentUpdate(nextProps, nextState){
+    if (this.props.location !== nextProps.location) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   render() {
-    const {item, uploadFile, dispatch} = this.props;
+    const {item, uploadFile, location, dispatch} = this.props;
     const ratio = CANVAS_WIDTH / item.width;
-    const memeTitle = item.id.replace(/\-/g, ' ');
+    const memeTitle = item.id.replace(/-/g, ' ');
 
     return (
       <div className="container">
