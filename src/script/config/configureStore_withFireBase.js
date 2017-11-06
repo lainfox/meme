@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import {routerMiddleware} from 'react-router-redux'
 import thunkMiddleware from 'redux-thunk'
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
-import { createLogger } from 'redux-logger'
+import {reactReduxFirebase} from 'react-redux-firebase'
+// import {createLogger} from 'redux-logger'
 import createHistory from 'history/createBrowserHistory'
 import rootReducer from '../reducers'
 
@@ -16,39 +16,27 @@ const firebaseConfig = {
   projectId: "meme-653c0",
   messagingSenderId: "713785192499"
 }
-const reduxFirebaseConfig = { userProfile: 'users', enableLogging: false }
+const reduxFirebaseConfig = { userProfile: 'users' }
 
 const initialState = {}
 const enhancers = []
-const loggerMiddleware = createLogger()
+// const loggerMiddleware = createLogger()
 const middleware = [
-  thunkMiddleware.withExtraArgument(getFirebase), // Pass getFirebase function as extra argument,
-  loggerMiddleware,
+  thunkMiddleware,
+  // loggerMiddleware,
   routerMiddleware(history)
 ]
 
-enhancers.push(
-  reactReduxFirebase(firebaseConfig, reduxFirebaseConfig)
-);
-
-if (process.env.NODE_ENV === 'development') {
-  const devToolsExtension = window.devToolsExtension
-
-  if (typeof devToolsExtension === 'function') {
-    enhancers.push(devToolsExtension())
-  }
-}
-
-
-const composedEnhancers = compose(
+// Add redux Firebase to compose
+const createStoreWithFirebase = compose(
   applyMiddleware(...middleware),
+  reactReduxFirebase(firebaseConfig, reduxFirebaseConfig),
   ...enhancers
-)
+)(createStore)
 
-const store = createStore(
+const store = createStoreWithFirebase(
   rootReducer,
-  initialState,
-  composedEnhancers
+  initialState
 )
 
 export default store;

@@ -29,7 +29,8 @@ class MemeEditor extends Component {
 
     this.image = new Image();
     this.image.setAttribute("crossOrigin", "anonymous");
-    this.image.src = props.item.image;
+    this.image.src = props.item.imgur;
+    // this.image.src = props.item.image;
 
     this.fontFamily = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
     this.fontSizeArray = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300]
@@ -39,68 +40,72 @@ class MemeEditor extends Component {
     this.canvasMaxWidth = 600;
 
     this.state = {
-      ratio: props.ratio
+      ratio: props.ratio,
+      loaded: false
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.item.image && !nextProps.item.image && !nextProps.uploadFile) {
-      return false;
-    }
+    // Block condition
+    // if (!this.props.item.image && !nextProps.item.image && !nextProps.uploadFile) {
+    //   return false;
+    // }
 
-    if (nextProps.uploadFile && !nextProps.item.image) {
+    if (nextProps.uploadFile) {
       this.image.src = nextProps.uploadFile;
-    }
-    else if (this.props.item.image !== nextProps.item.image) {
-      this.image.src = nextProps.item.image
-    }
-    this._imageLoadedTrigger();
+      this._prepareNewImageAndCanvas(this.image)
+    } 
+
+    // There is No route change.
+    //
+    // else if (this.props.item.image !== nextProps.item.image) {
+    //   this.image.src = nextProps.item.image
+    // } 
   }
 
   componentDidMount() {
-    this._imageLoadedTrigger()
+    this._prepareImageAndCanvas()
+    // this._imageLoadedTrigger()
   }
   componentWillUnmount() {
     this.props.dispatch(resetFile());
   }
-  shouldComponentUpdate(nextProps, nextState){
-    if (nextProps.uploadFile) {
-      return true
-    } else {
-      return false
-    }
-  }
 
-  _imageLoadedTrigger() {
-    if (!this.image.complete) {
-      this.image.onload = () => this.renderCanvasWithImage();
-    } else {
-      this.renderCanvasWithImage()
-    }
-  }
+  _prepareNewImageAndCanvas(newImage) {
+    const newRatio = this.canvasMaxWidth / newImage.width;
+    this.image = newImage;
 
-  renderCanvasWithImage(newImage) {
-    const canvas = this.canvas;
-
-    if (newImage && newImage.complete && newImage.width) {
-      this.image = newImage;
-    }
-
-    canvas.width = this.image.width;
-    canvas.height = this.image.height + this.waterMarkArea;
-    
-    const newRatio = this.canvasMaxWidth / this.image.width;
     if (this.state.ratio !== newRatio) {
       this.setState({ratio: newRatio});
     }
+    
+    this._prepareCanvas()
+  }
+
+  _prepareImageAndCanvas() {
+    if (!this.image.complete) {
+      this.image.onload = () => this._prepareCanvas()
+    } else {
+      this._prepareCanvas()
+    }    
+  }
+
+  _prepareCanvas() {
+    this.setState({loaded: true});
+    this.canvas.width = this.image.width;
+    this.canvas.height = this.image.height + this.waterMarkArea;
+    this.renderCanvas();
+  }
+
+  renderCanvas() {
+    const canvas = this.canvas;
 
     try {
       canvas.toDataURL()
     } 
     catch (c) {
-      return this.image.src = this.props.item.image, false;
+      return this.image.src = this.props.item.imgur, false;
     }
-
 
     var ctx = canvas.getContext("2d");
 
@@ -226,22 +231,6 @@ class MemeEditor extends Component {
     }
   }
 
-  readImageFromFile(input) {
-    if (input.target.files && input.target.files[0]) {
-      var FR = new FileReader();
-      FR.onload = (ev) => {
-        var newImage = new Image();
-        newImage.addEventListener("load", () => {
-          // console.log(newImage, newImage.width)
-          this.renderCanvasWithImage(newImage);
-          this.props.dispatch(push('/create'))
-        });
-        newImage.src = ev.target.result;
-      };
-      FR.readAsDataURL(input.target.files[0]);
-    }
-  }
-
   saveImage(ev) {
     const fileName = this.props.item.id;
     
@@ -299,7 +288,9 @@ class MemeEditor extends Component {
         <div className="blob-canvas">
           <div className="canvas-area">
             <div className="canvas-cover" style={{marginBottom: `${watermarkMargin}px`}}>
-              <CircularProgress style={{ position: 'absolute', left: '50%', margin: '40px 0 0 -20px', color: 'grey' }} />
+              {!this.state.loaded &&
+                <CircularProgress style={{ position: 'absolute', left: '50%', margin: '40px 0 0 -20px', color: 'grey' }} />
+              }
               <canvas ref={canvas => this.canvas = canvas} />
             </div>
           </div>
