@@ -1,61 +1,81 @@
-[{
-  "id": "Welcome",
-  "image": "/media/Welcome.jpg",
-  "width": 600,
-  "height": 443,
-  "category": "hi"
-}, {
-  "id": "Success-Kid",
-  "image": "/media/Success-Kid.jpg",
-  "width": 600,
-  "height": 600,
-  "category": "yes"
-}, {
-  "id": "Third-World-Success-Kids",
-  "image": "/media/Third-World-Success-Kids.jpg",
-  "width": 500,
-  "height": 445,
-  "category": "yes"
-}, {
-  "id": "Awkward-Moment-Seal",
-  "image": "/media/Awkward-Moment-Seal.jpg",
-  "width": 600,
-  "height": 439,
-  "category": "what"
-}, {
-  "id": "Suspicious-Fry",
-  "image": "/media/Suspicious-Fry.jpg",
-  "width": 600,
-  "height": 600,
-  "category": "what"
-}, {
-  "id": "One-Does-Not-Simply",
-  "image": "/media/One-Does-Not-Simply.jpg",
-  "width": 600,
-  "height": 600,
-  "category": "what"
-}, {
-  "id": "Dont-Talk-To-Me",
-  "image": "/media/Dont-Talk-To-Me.jpg",
-  "width": 620,
-  "height": 620,
-  "category": "what"
-}, {
-  "id": "Painful-guy",
-  "image": "/media/Painful-Guy.jpg",
-  "width": 600,
-  "height": 600,
-  "category": "what"
-}, {
-  "id": "Annoying-Facebook-Girl",
-  "image": "/media/Annoying-Facebook-Girl.jpg",
-  "width": 600,
-  "height": 600,
-  "category": "what"
-}, {
-  "id": "Seal-of-Approval",
-  "image": "/media/Seal-of-Approval.jpg",
-  "width": 600,
-  "height": 445,
-  "category": "happy"
-}]
+[
+  {
+    "category" : "hi",
+    "height" : 443,
+    "id" : "Welcome",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FWelcome.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "yes",
+    "height" : 600,
+    "id" : "Success-Kid",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSuccess-Kid.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "yes",
+    "height" : 445,
+    "id" : "Third-World-Success-Kids",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FThird-World-Success-Kids.jpg?alt=media",
+    "width" : 500
+  }, {
+    "category" : "what",
+    "height" : 439,
+    "id" : "Awkward-Moment-Seal",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FAwkward-Moment-Seal.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "Suspicious-Fry",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSuspicious-Fry.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "One-Does-Not-Simply",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FOne-Does-Not-Simply.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 620,
+    "id" : "Dont-Talk-To-Me",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FDont-Talk-To-Me.jpg?alt=media",
+    "width" : 620
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "Painful-guy",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FPainful-Guy.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 680,
+    "id" : "Grumpy-Cat",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FGrumpy-Cat.jpg?alt=media",
+    "width" : 680
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "Annoying-Facebook-Girl",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FAnnoying-Facebook-Girl.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 750,
+    "id" : "So-What",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSo-What.jpg?alt=media",
+    "width" : 498
+  }, {
+    "category" : "happy",
+    "height" : 445,
+    "id" : "Seal-of-Approval",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSeal-of-Approval.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "happy",
+    "height" : 493,
+    "id" : "Mean-Guy",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FMean-Guy.jpg?alt=media",
+    "width" : 640
+  }
+]
