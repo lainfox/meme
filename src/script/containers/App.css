@@ -12,7 +12,7 @@
   margin: 10px 2em 10px 10px;
 }
 .logo .app-logo {
-  vertical-align: middle;
+  vertical-align: bottom;
   animation: App-logo-spin infinite 20s linear;
   height: 40px;
 }
