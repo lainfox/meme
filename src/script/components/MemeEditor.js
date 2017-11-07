@@ -51,16 +51,14 @@ class MemeEditor extends Component {
     //   return false;
     // }
 
-    if (nextProps.uploadFile) {
+    // History back comes from upload uri
+    if (!this.props.item.image && nextProps.item.image) {
+      this.image.src = nextProps.item.imgur
+      this._prepareNewImageAndCanvas(this.image)
+    } else if (nextProps.uploadFile && !this.props.item.image && !nextProps.item.image) {
       this.image.src = nextProps.uploadFile;
       this._prepareNewImageAndCanvas(this.image)
-    } 
-
-    // There is No route change.
-    //
-    // else if (this.props.item.image !== nextProps.item.image) {
-    //   this.image.src = nextProps.item.image
-    // } 
+    }
   }
 
   componentDidMount() {
@@ -264,6 +262,7 @@ class MemeEditor extends Component {
     ctx.moveTo(0, this.canvas.height - this.waterMarkArea + 1);
     ctx.lineTo(this.canvas.width, this.canvas.height - this.waterMarkArea + 1);
     ctx.stroke();
+    ctx.setLineDash([]);
   }
 
   _setFontFamily(isSerifFont) {
