@@ -49,6 +49,14 @@
 .footer-link li {
   display: inline-block;
 }
+.footer-link .copyright {
+  color: #111;
+  font: 600 14px 'Noto Sans KR';
+}
+.footer-link .copyright em {
+  font-style: normal;
+  color: #232323;
+}
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

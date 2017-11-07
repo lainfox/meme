@@ -110,7 +110,7 @@ class MemeEditor extends Component {
     var ctx = canvas.getContext("2d");
 
     // WaterMark Area
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#909090";
     ctx.fillRect(0, this.image.height, canvas.width, canvas.height);
     this.buildWaterMark();
 
@@ -249,10 +249,21 @@ class MemeEditor extends Component {
 
   buildWaterMark() {
     const ctx = this.canvas.getContext('2d');
-    ctx.fillStyle = "#ccc";
+    const img = document.querySelector('.logo img');
+
+    ctx.drawImage(img, this.canvas.width - 40, this.canvas.height - this.waterMarkArea + 5, 30, 30);
+    ctx.fillStyle = "#313131";
     ctx.textAlign = "right";
-    ctx.font = `400 18px Arial, Impact`;
-    ctx.fillText(document.location.hostname, this.canvas.width - 10, this.canvas.height - (this.waterMarkArea/3) );
+    ctx.font = `600 14px Noto Sans KR`;
+    ctx.fillText(`onMeme.com`, this.canvas.width - 50, this.canvas.height - (this.waterMarkArea/3) );
+    ctx.fillStyle = "#111";
+    ctx.fillText(`Meme.com`, this.canvas.width - 50, this.canvas.height - (this.waterMarkArea/3) );
+
+    ctx.beginPath();
+    ctx.setLineDash([5, 10]);
+    ctx.moveTo(0, this.canvas.height - this.waterMarkArea + 1);
+    ctx.lineTo(this.canvas.width, this.canvas.height - this.waterMarkArea + 1);
+    ctx.stroke();
   }
 
   _setFontFamily(isSerifFont) {

@@ -13,7 +13,7 @@ class App extends Component {
         <header className="App-header">
           <div className="container">
             <Link className="logo" to="/">
-              <img src={logo} className="app-logo" alt="onMEME logo" />
+              <img src={logo} className="app-logo" alt="onMEME logo" ref="logo" />
               <span><span className="hidden-text">o</span>n MEME</span>
             </Link>
             <Upload ref="uploadFile" />
@@ -25,7 +25,7 @@ class App extends Component {
         <footer className="App-footer">
           <Adsense client="ca-pub-7679582849263204" slot="7907287795" />
           <ul className="container footer-link">
-            <li>OnMEME &copy; 2017</li>
+            <li className="copyright"><em>on</em>MEME &copy; 2017</li>
           </ul>
         </footer>
       </div>
