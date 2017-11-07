@@ -37,7 +37,7 @@ class MemeEditor extends Component {
     this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
     this.textType = {top: 1, bottom: -1};
     this.waterMarkArea = 40;
-    this.canvasMaxWidth = 600;
+    this.canvasMaxWidth = (window.outerWidth < 600) ? window.outerWidth : 600;
 
     this.state = {
       ratio: props.ratio,
@@ -69,14 +69,16 @@ class MemeEditor extends Component {
     this.props.dispatch(resetFile());
   }
 
-  _prepareNewImageAndCanvas(newImage) {
-    const newRatio = this.canvasMaxWidth / newImage.width;
-    this.image = newImage;
 
+  _setRatio() {
+    const newRatio = this.canvasMaxWidth / this.image.width;
     if (this.state.ratio !== newRatio) {
       this.setState({ratio: newRatio});
     }
-    
+  }
+
+  _prepareNewImageAndCanvas(newImage) {
+    this.image = newImage;
     this._prepareCanvas()
   }
 
@@ -89,6 +91,7 @@ class MemeEditor extends Component {
   }
 
   _prepareCanvas() {
+    this._setRatio();
     this.setState({loaded: true});
     this.canvas.width = this.image.width;
     this.canvas.height = this.image.height + this.waterMarkArea;
@@ -306,7 +309,7 @@ class MemeEditor extends Component {
           </div>
           <div className="canvas-caption">
             <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
-            <div className="field">
+            <div className="field field-first">
               <TextField label="Top Text" inputRef={input => this.topText = input} multiline rows="4" margin="normal"
                 onChange={() => this.drawCanvas()} />
               <div className="handler-fontsize">
@@ -319,7 +322,7 @@ class MemeEditor extends Component {
                 </Button>
               </div>
             </div>
-            <div className="field">
+            <div className="field field-last">
               <TextField label="Bottom Text" inputRef={input => this.bottomText = input} multiline rows="4" margin="normal"
                 onChange={() => this.drawCanvas()} />
               <div className="handler-fontsize">

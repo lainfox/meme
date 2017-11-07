@@ -2,3 +2,9 @@
 	margin: 10px auto;
 	text-align: center;
 }
+
+@media screen and (max-width:479px) {
+  .ads-component {
+    margin: 4px auto;
+  }
+}

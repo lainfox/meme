@@ -14,7 +14,7 @@ class App extends Component {
           <div className="container">
             <Link className="logo" to="/">
               <img src={logo} className="app-logo" alt="onMEME logo" ref="logo" />
-              <span><span className="hidden-text">o</span>n MEME</span>
+              <span className="logo-text"><span className="hidden-text">o</span>n MEME</span>
             </Link>
             <Upload ref="uploadFile" />
           </div>

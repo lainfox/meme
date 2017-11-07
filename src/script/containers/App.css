@@ -1,4 +1,6 @@
+
 .App {
+  overflow: hidden;
 }
 
 .App-header {
@@ -16,7 +18,8 @@
   animation: App-logo-spin infinite 20s linear;
   height: 40px;
 }
-.logo span {
+
+.logo .logo-text {
   vertical-align: bottom;
   color: #000;
   font: 500 30px/1 Arial;
@@ -61,4 +64,19 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@media screen and (max-width:479px) {
+  .logo {
+    margin: 5px 20px 10px 10px;
+  }
+  .logo .app-logo {
+    height: 28px;
+  }
+  .logo .logo-text {
+    font-size: 18px;
+  }
+  .App-footer {
+    margin-top: 20px;
+  }
 }
