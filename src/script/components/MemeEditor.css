@@ -87,7 +87,7 @@
     margin-left: 10px;
     display: flex;
   }
-  .canvas-caption .field > [class^="Mui"] {
+  .canvas-caption .field > div:first-child {
     margin-top: 0;
   }
   .canvas-caption .field-first {top: 0;}
