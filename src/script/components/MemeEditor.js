@@ -119,7 +119,7 @@ class MemeEditor extends Component {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 6;
     ctx.textAlign = "center";
-    ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px ${this.fontFamily}`;
+    ctx.font = `600 ${this.fontSizeArray[this.fontDefaultIndex]}px ${this.fontFamily}`;
     ctx.textBaseline = 'alphabetic';
     ctx.lineJoin="miter";
     ctx.miterLimit = 2;
@@ -174,8 +174,8 @@ class MemeEditor extends Component {
       list[index].text = item;
       list[index].posX = canvas.width / 2;
       list[index].posY = (which === 1) ?
-        (index * which * fontSize ) + 15 + fontSize - (fontSize * 0.18): // Top text
-        (index * which * fontSize) + canvas.height - this.waterMarkArea - 15 - (fontSize * 0.18); // Bottom text
+        (index * which * fontSize ) + 15 + fontSize - (fontSize * 0.18) + (index * fontSize * 0.2): // Top text
+        (index * which * fontSize) + canvas.height - this.waterMarkArea - 15 - (fontSize * 0.18) - (index * fontSize * 0.2); // Bottom text
       return list;
     }, {});
 
@@ -185,7 +185,7 @@ class MemeEditor extends Component {
 
   _setCanvasFont(fontSize) {
     const canvasContext = this.canvas.getContext('2d');
-    canvasContext.font = `700 ${fontSize}px ${this.fontFamily}`;
+    canvasContext.font = `600 ${fontSize}px ${this.fontFamily}`;
   }
 
   drawText(textList) {
