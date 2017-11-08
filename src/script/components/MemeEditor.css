@@ -39,6 +39,9 @@
   font: 14px/1.5 'Noto Sans KR', sans-serif;
   background-color: rgba(0,0,0, .05);
 }
+.canvas-caption .expanded-checkbox {
+
+}
 .canvas-caption .handler-fontsize {
   text-align: right;
 }
@@ -71,7 +74,7 @@
 @media screen and (max-width:479px) {
   .blob-canvas {flex-direction: column-reverse;}
 
-  .canvas-area {margin: 78px 0 120px;}
+  .canvas-area {margin: 78px 0 154px;}
   .canvas-cover canvas {
     max-width: 100%;
   }
@@ -91,7 +94,12 @@
     margin-top: 0;
   }
   .canvas-caption .field-first {top: 0;}
-  .canvas-caption .field-last {bottom: 46px;}
+  .canvas-caption .field-last {bottom: 76px;}
+  .canvas-caption .expanded-checkbox {
+    position: absolute;
+    left: 10px;
+    bottom: 35px;
+  }
   .canvas-caption .generate-image {
     position: absolute;
     bottom: 0;
@@ -104,7 +112,7 @@
   }
   .canvas-caption .divider {display: none}
   .canvas-caption textarea {
-    width: 250px;
+    width: calc(100vw - 70px);
     height: 40px;
   }
 }

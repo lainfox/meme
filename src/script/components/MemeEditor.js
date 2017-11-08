@@ -6,6 +6,8 @@ import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
 import {CircularProgress} from 'material-ui/Progress';
 import TextField from 'material-ui/TextField';
+import {FormControlLabel} from 'material-ui/Form';
+import Checkbox from 'material-ui/Checkbox';
 import Button from 'material-ui/Button';
 import './MemeEditor.css';
 
@@ -22,6 +24,8 @@ const FONT_SIZE_DEFAULT_INDEX = 3;
 const WATER_MARK_AREA = 40;
 const CANVAS_MAX_WIDTH = (window.outerWidth < 600) ? window.outerWidth : 600;
 const LINE_HEIGHT = 1.2;
+const TOP_DEFAULT_TEXT = 'Top text';
+const BOT_DEFAULT_TEXT = 'Bottom text';
 
 class MemeEditor extends Component {
   static propTypes = {
@@ -44,11 +48,12 @@ class MemeEditor extends Component {
     // this.image.src = props.item.image;
 
     this.textType = {top: 1, bottom: -1};
+    this.canvasHeight = 0;
     this.expandLineHeight = 0;
 
     this.state = {
       ratio: props.ratio,
-      expand: true,
+      expand: false,
       loaded: false
     }
   }
@@ -102,6 +107,7 @@ class MemeEditor extends Component {
     this.setState({loaded: true});
     this.canvas.width = this.image.width;
     this.canvas.height = this.image.height + this.waterMarkArea;
+    this.canvasHeight = this.canvas.height; // Use for without expand area - buildCanvasHeight()
 
     // if (this.state.expand) {
     //   this.canvas.height += this.fontSizeArray[this.fontDefaultIndex] + 30;
@@ -121,15 +127,6 @@ class MemeEditor extends Component {
 
     var ctx = canvas.getContext("2d");
 
-    // WaterMark Area 
-    this.buildWaterMark();
-
-    // ctx.fillStyle = "white";
-    // ctx.strokeStyle = "black";
-    // ctx.lineWidth = 6;
-    // ctx.textAlign = "center";
-    // ctx.font = `600 ${this.fontSizeArray[this.fontDefaultIndex]}px ${this.fontFamily}`;
-    // ctx.textBaseline = 'alphabetic';
     ctx.lineJoin="miter";
     ctx.miterLimit = 2;
     this.drawCanvas();
@@ -138,30 +135,44 @@ class MemeEditor extends Component {
   // Excute draw canvas with BuilImage & BuildText
   drawCanvas(makeEmptyText) {
     const ctx = this.canvas.getContext('2d');
+    const posX = this.canvas.width/2;
+    const maxWidth = this.canvas.width - 10;
+
+    const topTextInput = this.topText.value || (makeEmptyText ? '' : TOP_DEFAULT_TEXT);
+    const topTextLines = this.wrapText(ctx, topTextInput, maxWidth, 'TOP');
+    const bottomTextInput = this.bottomText.value || (makeEmptyText ? '' : BOT_DEFAULT_TEXT);
+    const bottomTextLines = this.wrapText(ctx, bottomTextInput, maxWidth, 'BOT');
+
+    this.buildCanvasHeight(ctx, this.expandCheckbox.checked, bottomTextLines);
+
     this.buildImage(this.image);
-
-    const topTextInput = this.topText.value || (makeEmptyText ? '' : 'Top text');
-    const bottomTextInput = this.bottomText.value || (makeEmptyText ? '' : 'Bottom text');
-
-    this.wrapText(ctx, topTextInput, this.canvas.width/2, 14, this.canvas.width - 10, 'TOP');
-    this.wrapText(ctx, bottomTextInput, this.canvas.width/2, (this.canvas.height - this.waterMarkArea) - 20, this.canvas.width - 10, 'BOT');
+    this.drawTextRightNow(ctx, topTextLines, this.canvas.width/2, 14, maxWidth, 'TOP');
+    this.drawTextRightNow(ctx, bottomTextLines, this.canvas.width/2, (this.canvas.height - this.waterMarkArea) - 20, maxWidth, 'BOT', this.expandCheckbox.checked);
     this.buildWaterMark();
   }
 
+  buildCanvasHeight(ctx, expanded, bottomText) {
+    const lineHeight = this.fontSizeArray[this.bottomFontIndex] * LINE_HEIGHT;
+    this.canvas.height = (expanded) ?
+      this.canvasHeight + (lineHeight * bottomText.length) + 24 :
+      this.canvasHeight;
+
+    ctx.fillStyle = "#f1f1f1";
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   buildImage(image) {
-    const canvas = this.canvas;
-    const ctx = canvas.getContext('2d');
-    
-    // 600, 488
-    // ctx.drawImage(image, 0, 0, canvas.width, canvas.height - this.waterMarkArea);
-    ctx.drawImage(image, 0, 0, canvas.width, this.image.height * this.state.ratio);
-    // sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    const ctx = this.canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, this.canvas.width, this.image.height);
+  }
+
+  _checkExpand(checkbox) {
+    this.drawCanvas();
   }
 
   /* Related to TEXT */
-
   // TODO: 띄워쓰기 없는 경우 metrics 처리 
-  wrapText(ctx, text, x, y, maxWidth, position) {
+  wrapText(ctx, text, maxWidth, position) {
     const words = text.replace(/\n/g, " ___CRLF___ ").split(' ');
     const fontSize = (position === 'TOP') ? this.fontSizeArray[this.topFontIndex] : this.fontSizeArray[this.bottomFontIndex];
     this._setCanvasFont(fontSize);
@@ -184,26 +195,39 @@ class MemeEditor extends Component {
     }
     lines.push(line);
 
-    this.drawTextRightNow(ctx, lines, x, y, maxWidth, position);
+    return lines;
   }
 
-  drawTextRightNow(ctx, lines, x, y, maxWidth, position) {
+  drawTextRightNow(ctx, lines, x, y, maxWidth, position, expanded) {
     const fontSize = (position === 'TOP') ? this.fontSizeArray[this.topFontIndex] : this.fontSizeArray[this.bottomFontIndex];
     const lineHeight = fontSize * LINE_HEIGHT;
+    let posY = y;
 
     this._setCanvasFont(fontSize);
 
-    ctx.textBaseline = (position === 'TOP') ? 'hanging' : 'alphabetic';
-    ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
     ctx.lineWidth = 6;
     ctx.textAlign = "center";
-    
-    // const fontSize = parseFloat(ctx.font);
-    let posY = y;
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
 
-    if (position === 'BOT') {
+    if (position === 'BOT') { // BOT
+      if (expanded) {
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "transparent";
+      }
       posY = posY - (lines.length - 1) * lineHeight;
+      ctx.textBaseline = 'alphabetic';
+    } else { // TOP
+      ctx.textBaseline = 'hanging';
+    }
+
+    // Set default text as Alpha
+    if (lines[0] === TOP_DEFAULT_TEXT + ' ' && !this.topText.value.trim()) {
+      ctx.save();
+      ctx.globalAlpha = 0.7;
+    } else if (lines[0] === BOT_DEFAULT_TEXT + ' ' && !this.bottomText.value.trim()) {
+      ctx.save();
+      ctx.globalAlpha = 0.7;
     }
 
     for(let line of lines) {
@@ -212,6 +236,8 @@ class MemeEditor extends Component {
       ctx.fillText(line.trim(), x, posY, maxWidth);
       posY += lineHeight;
     }
+
+    ctx.restore();
   }
 
   _getValidFontSizeIndex(index) {
@@ -267,7 +293,8 @@ class MemeEditor extends Component {
 
     ctx.lineWidth = 1;
     ctx.fillStyle = "#909090";
-    ctx.fillRect(0, this.image.height, this.canvas.width, this.canvas.height);
+    ctx.strokeStyle = "black";
+    ctx.fillRect(0, this.canvas.height - this.waterMarkArea, this.canvas.width, this.canvas.height);
 
     ctx.drawImage(img, this.canvas.width - 40, this.canvas.height - this.waterMarkArea + 5, 30, 30);
     ctx.fillStyle = "#313131";
@@ -313,6 +340,7 @@ class MemeEditor extends Component {
     // Should be re-render with ratio
     const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
     // const watermarkMargin = 1;
+    // console.warn(this.state.ratio, this.image.height)
 
     return (
       <div className="meme-editor">
@@ -326,7 +354,16 @@ class MemeEditor extends Component {
             </div>
           </div>
           <div className="canvas-caption">
-            <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
+            <FormControlLabel 
+              className="expanded-checkbox"
+              control={<Checkbox
+                  onChange={() => this._checkExpand('checkedB')}
+                  inputRef={checkbox => this.expandCheckbox = checkbox}
+                  value="expand"
+                />
+              } label="Expand"
+            />
+
             <div className="field field-first">
               <TextField label="Top Text" inputRef={input => this.topText = input} multiline rows="4" margin="normal"
                 onChange={input => this.drawCanvas()} />
@@ -353,6 +390,9 @@ class MemeEditor extends Component {
                 </Button>
               </div>
             </div>
+
+            <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
+            
             <div className="generate-image">
               <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
                 <Button raised color="accent" className="full-button">
