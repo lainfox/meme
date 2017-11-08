@@ -311,7 +311,6 @@ class MemeEditor extends Component {
   render() {
     // const isNew = item.id === 'New MEME';
     // Should be re-render with ratio
-    console.warn(this.state.ratio, this.waterMarkArea)
     const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
     // const watermarkMargin = 1;
 
