@@ -404,7 +404,7 @@ class MemeEditor extends Component {
             <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
             
             <div className="generate-image">
-              <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
+              <a href="#" id="saveImage" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
                 <Button raised color="accent" className="full-button">
                 Save image
                 </Button>
