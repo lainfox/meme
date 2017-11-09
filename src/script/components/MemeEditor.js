@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {push} from 'react-router-redux'
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
+import urlSlug from 'url-slug';
+import shortId from 'shortid';
 import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
 import {CircularProgress} from 'material-ui/Progress';
@@ -269,14 +271,24 @@ class MemeEditor extends Component {
     }
   }
 
+  _getUrlSlug() {
+    const title = this.topText.value || this.bottomText.value;
+
+    if (!title) {
+      return shortId.generate()
+    }
+
+    return urlSlug(title);
+  }
+  
   saveImage(ev) {
-    const fileName = this.props.item.id;
+    const fileName = this._getUrlSlug();
     
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
     }
 
-    const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg'));
+    const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0));
     this.saveButton.href = URL.createObjectURL(blob);
     this.saveButton.download = fileName;
 
