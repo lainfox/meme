@@ -43,7 +43,7 @@
   background-color: #383838;
   box-sizing: border-box;  
 }
-.footer-link {
+.App-footer .footer-link {
   list-style: none;
   margin: 20px;
   padding: 0;
