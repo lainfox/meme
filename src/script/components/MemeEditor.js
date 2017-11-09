@@ -290,8 +290,8 @@ class MemeEditor extends Component {
     const img = document.querySelector('.logo img');
 
     ctx.lineWidth = 1;
-    ctx.fillStyle = "#909090";
-    ctx.strokeStyle = "black";
+    ctx.fillStyle = "#e4e4e4";
+    ctx.strokeStyle = "#909090";
     ctx.fillRect(0, this.canvas.height - this.waterMarkArea, this.canvas.width, this.canvas.height);
 
     ctx.drawImage(img, this.canvas.width - 40, this.canvas.height - this.waterMarkArea + 5, 30, 30);
