@@ -6,6 +6,8 @@ import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
 import {CircularProgress} from 'material-ui/Progress';
 import TextField from 'material-ui/TextField';
+import {FormControlLabel} from 'material-ui/Form';
+import Checkbox from 'material-ui/Checkbox';
 import Button from 'material-ui/Button';
 import './MemeEditor.css';
 
@@ -16,6 +18,14 @@ import './MemeEditor.css';
 // 얘는 됨
 // const imageUrl = 'https://i.imgur.com/AD3MbBi.jpg';
 
+const FONT_FAMILY = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
+const FONT_SIZE_ARRAY = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300];
+const FONT_SIZE_DEFAULT_INDEX = 3;
+const WATER_MARK_AREA = 40;
+const CANVAS_MAX_WIDTH = (window.outerWidth < 600) ? window.outerWidth : 600;
+const LINE_HEIGHT = 1.2;
+const TOP_DEFAULT_TEXT = 'Top text';
+const BOT_DEFAULT_TEXT = 'Bottom text';
 
 class MemeEditor extends Component {
   static propTypes = {
@@ -26,21 +36,24 @@ class MemeEditor extends Component {
 
   constructor(props) {
     super(props);
+    this.fontFamily = FONT_FAMILY;
+    this.fontSizeArray = FONT_SIZE_ARRAY;
+    this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = FONT_SIZE_DEFAULT_INDEX;
+    this.waterMarkArea = WATER_MARK_AREA;
+    this.canvasMaxWidth = CANVAS_MAX_WIDTH;
 
     this.image = new Image();
     this.image.setAttribute("crossOrigin", "anonymous");
     this.image.src = props.item.imgur;
     // this.image.src = props.item.image;
 
-    this.fontFamily = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
-    this.fontSizeArray = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300]
-    this.topFontIndex = this.bottomFontIndex = this.fontDefaultIndex = 3;
     this.textType = {top: 1, bottom: -1};
-    this.waterMarkArea = 40;
-    this.canvasMaxWidth = 600;
+    this.canvasHeight = 0;
+    this.expandLineHeight = 0;
 
     this.state = {
       ratio: props.ratio,
+      expand: false,
       loaded: false
     }
   }
@@ -51,16 +64,14 @@ class MemeEditor extends Component {
     //   return false;
     // }
 
-    if (nextProps.uploadFile) {
+    // History back comes from upload uri
+    if (!this.props.item.image && nextProps.item.image) {
+      this.image.src = nextProps.item.imgur
+      this._prepareNewImageAndCanvas(this.image)
+    } else if (nextProps.uploadFile && !this.props.item.image && !nextProps.item.image) {
       this.image.src = nextProps.uploadFile;
       this._prepareNewImageAndCanvas(this.image)
-    } 
-
-    // There is No route change.
-    //
-    // else if (this.props.item.image !== nextProps.item.image) {
-    //   this.image.src = nextProps.item.image
-    // } 
+    }
   }
 
   componentDidMount() {
@@ -71,29 +82,36 @@ class MemeEditor extends Component {
     this.props.dispatch(resetFile());
   }
 
-  _prepareNewImageAndCanvas(newImage) {
-    const newRatio = this.canvasMaxWidth / newImage.width;
-    this.image = newImage;
-
+  _setRatio() {
+    const newRatio = this.canvasMaxWidth / this.image.width;
     if (this.state.ratio !== newRatio) {
       this.setState({ratio: newRatio});
     }
-    
-    this._prepareCanvas()
+  }
+
+  _prepareNewImageAndCanvas(newImage) {
+    this.image = newImage;
+    this._setupCanvas()
   }
 
   _prepareImageAndCanvas() {
     if (!this.image.complete) {
-      this.image.onload = () => this._prepareCanvas()
+      this.image.onload = () => this._setupCanvas()
     } else {
-      this._prepareCanvas()
+      this._setupCanvas()
     }    
   }
 
-  _prepareCanvas() {
+  _setupCanvas() {
+    this._setRatio();
     this.setState({loaded: true});
     this.canvas.width = this.image.width;
     this.canvas.height = this.image.height + this.waterMarkArea;
+    this.canvasHeight = this.canvas.height; // Use for without expand area - buildCanvasHeight()
+
+    // if (this.state.expand) {
+    //   this.canvas.height += this.fontSizeArray[this.fontDefaultIndex] + 30;
+    // }
     this.renderCanvas();
   }
 
@@ -109,125 +127,147 @@ class MemeEditor extends Component {
 
     var ctx = canvas.getContext("2d");
 
-    // WaterMark Area
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, this.image.height, canvas.width, canvas.height);
-    this.buildWaterMark();
-
-    ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 6;
-    ctx.textAlign = "center";
-    ctx.font = `700 ${this.fontSizeArray[this.fontDefaultIndex]}px ${this.fontFamily}`;
-    ctx.textBaseline = 'alphabetic';
     ctx.lineJoin="miter";
     ctx.miterLimit = 2;
     this.drawCanvas();
   }
 
+  // Excute draw canvas with BuilImage & BuildText
   drawCanvas(makeEmptyText) {
-    const topText = this.topText.value || (makeEmptyText ? '' : 'Top text');
-    const bottomText = this.bottomText.value || (makeEmptyText ? '' : 'Bottom text');
+    const ctx = this.canvas.getContext('2d');
+    const posX = this.canvas.width/2;
+    const maxWidth = this.canvas.width - 10;
 
-    this.drawImage(this.image);
-    this.buildText(topText, this.textType.top);
-    this.buildText(bottomText, this.textType.bottom);
+    const topTextInput = this.topText.value || (makeEmptyText ? '' : TOP_DEFAULT_TEXT);
+    const topTextLines = this.wrapText(ctx, topTextInput, maxWidth, 'TOP');
+    const bottomTextInput = this.bottomText.value || (makeEmptyText ? '' : BOT_DEFAULT_TEXT);
+    const bottomTextLines = this.wrapText(ctx, bottomTextInput, maxWidth, 'BOT');
+
+    this.buildCanvasHeight(ctx, this.expandCheckbox.checked, bottomTextLines);
+
+    this.buildImage(this.image);
+    this.drawTextRightNow(ctx, topTextLines, this.canvas.width/2, 14, maxWidth, 'TOP');
+    this.drawTextRightNow(ctx, bottomTextLines, this.canvas.width/2, (this.canvas.height - this.waterMarkArea) - 20, maxWidth, 'BOT', this.expandCheckbox.checked);
+    this.buildWaterMark();
   }
 
-  drawImage(image) {
-    const canvas = this.canvas;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height - this.waterMarkArea);
-    // sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+  buildCanvasHeight(ctx, expanded, bottomText) {
+    const lineHeight = this.fontSizeArray[this.bottomFontIndex] * LINE_HEIGHT;
+    this.canvas.height = (expanded) ?
+      this.canvasHeight + (lineHeight * bottomText.length) + 24 :
+      this.canvasHeight;
+
+    ctx.fillStyle = "#f1f1f1";
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  buildText(text, which) {
-    const canvas = this.canvas;
-    let textArr = text.split(/\r?\n/g);
-    if (which === -1) {// Bottom
-      textArr.reverse();
-    }
+  buildImage(image) {
+    const ctx = this.canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, this.canvas.width, this.image.height);
+  }
 
-    let additional_fontSize;
-    switch(textArr.length) {
-    case 0:
-    case 1:
-    case 2:
-      additional_fontSize = 0;
-      break;
-    case 3:
-    case 4:
-    case 5:
-      additional_fontSize = -1;
-      break;
-    case 6:
-    default:
-      additional_fontSize = -2;
-    }
+  _checkExpand(checkbox) {
+    this.drawCanvas();
+  }
 
-    const fontSize = (which === -1) ?
-      this.fontSizeArray[this._getValidIndex(this.bottomFontIndex + additional_fontSize)] :
-      this.fontSizeArray[this._getValidIndex(this.topFontIndex + additional_fontSize)];
-    const textList = textArr.reduce((list, item, index) => {
-      list[index] = {};
-      list[index].text = item;
-      list[index].posX = canvas.width / 2;
-      list[index].posY = (which === 1) ?
-        (index * which * fontSize ) + 15 + fontSize - (fontSize * 0.18): // Top text
-        (index * which * fontSize) + canvas.height - this.waterMarkArea - 15 - (fontSize * 0.18); // Bottom text
-      return list;
-    }, {});
+  /* Related to TEXT */
+  // TODO: 띄워쓰기 없는 경우 metrics 처리 
+  wrapText(ctx, text, maxWidth, position) {
+    const words = text.replace(/\n/g, " ___CRLF___ ").split(' ');
+    const fontSize = (position === 'TOP') ? this.fontSizeArray[this.topFontIndex] : this.fontSizeArray[this.bottomFontIndex];
+    this._setCanvasFont(fontSize);
+
+    let lines = [];
+    let line = '';
+
+    for (let word of words) {
+      let isNewLine = word === '___CRLF___';
+      word = isNewLine ? '' : word;
+      let currentLine = `${line}${word} `;
+      let currentWidth = ctx.measureText(currentLine).width;
+
+      if (currentWidth < maxWidth && !isNewLine) {
+        line = currentLine;
+      } else {
+        lines.push(line);
+        line = word + ' ';
+      }
+    }
+    lines.push(line);
+
+    return lines;
+  }
+
+  drawTextRightNow(ctx, lines, x, y, maxWidth, position, expanded) {
+    const fontSize = (position === 'TOP') ? this.fontSizeArray[this.topFontIndex] : this.fontSizeArray[this.bottomFontIndex];
+    const lineHeight = fontSize * LINE_HEIGHT;
+    let posY = y;
 
     this._setCanvasFont(fontSize);
-    this.drawText(textList);
-  }
 
-  _setCanvasFont(fontSize) {
-    const canvasContext = this.canvas.getContext('2d');
-    canvasContext.font = `700 ${fontSize}px ${this.fontFamily}`;
-  }
+    ctx.lineWidth = 6;
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
 
-  drawText(textList) {
-    const canvas = this.canvas;
-    Object.keys(textList).forEach(index => {
-      canvas.getContext('2d').strokeText(
-        textList[index].text,
-        textList[index].posX,
-        textList[index].posY,
-        canvas.width - 10
-      );
-      canvas.getContext('2d').fillText(
-        textList[index].text,
-        textList[index].posX,
-        textList[index].posY,
-        canvas.width - 10
-      );
-    })
-  }
-
-  setFontSize(which, index, doDrawCanvas) {
-    // this.fontDefaultIndex = this.fontDefaultIndex + size;
-    // this.fontSizeArray
-    if (which === 'top' || which === 1) {
-      this.topFontIndex = this.topFontIndex + index;
-      this.topFontIndex = this._getValidIndex(this.topFontIndex);
-    } else {
-      this.bottomFontIndex = this.bottomFontIndex + index;
-      this.bottomFontIndex = this._getValidIndex(this.bottomFontIndex)
+    if (position === 'BOT') { // BOT
+      if (expanded) {
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "transparent";
+      }
+      posY = posY - (lines.length - 1) * lineHeight;
+      ctx.textBaseline = 'alphabetic';
+    } else { // TOP
+      ctx.textBaseline = 'hanging';
     }
 
-    if (doDrawCanvas) {
-      this.drawCanvas();
+    // Set default text as Alpha
+    if (lines[0] === TOP_DEFAULT_TEXT + ' ' && !this.topText.value.trim()) {
+      ctx.save();
+      ctx.globalAlpha = 0.7;
+    } else if (lines[0] === BOT_DEFAULT_TEXT + ' ' && !this.bottomText.value.trim()) {
+      ctx.save();
+      ctx.globalAlpha = 0.7;
     }
+
+    for(let line of lines) {
+      // add stroke
+      ctx.strokeText(line.trim(), x, posY, maxWidth);
+      ctx.fillText(line.trim(), x, posY, maxWidth);
+      posY += lineHeight;
+    }
+
+    ctx.restore();
   }
 
-  _getValidIndex(index) {
+  _getValidFontSizeIndex(index) {
     if (index < 0) {
       return 0;
     } else if (index > this.fontSizeArray.length -1) {
       return this.fontSizeArray.length -1;
     } else {
       return index;
+    }
+  }
+  
+  _setCanvasFont(fontSize) {
+    const canvasContext = this.canvas.getContext('2d');
+    canvasContext.font = `600 ${fontSize}px ${this.fontFamily}`;
+  }
+
+  setFontSize(where, addValue, doDrawCanvas) {
+    // this.fontDefaultIndex = this.fontDefaultIndex + size;
+    // this.fontSizeArray
+    if (where === 'TOP' || where === 1) {
+      this.topFontIndex = this.topFontIndex + addValue;
+      this.topFontIndex = this._getValidFontSizeIndex(this.topFontIndex);
+    } else {
+      this.bottomFontIndex = this.bottomFontIndex + addValue;
+      this.bottomFontIndex = this._getValidFontSizeIndex(this.bottomFontIndex)
+    }
+
+    if (doDrawCanvas) {
+      this.drawCanvas();
     }
   }
 
@@ -249,10 +289,27 @@ class MemeEditor extends Component {
 
   buildWaterMark() {
     const ctx = this.canvas.getContext('2d');
-    ctx.fillStyle = "#ccc";
+    const img = document.querySelector('.logo img');
+
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "#909090";
+    ctx.strokeStyle = "black";
+    ctx.fillRect(0, this.canvas.height - this.waterMarkArea, this.canvas.width, this.canvas.height);
+
+    ctx.drawImage(img, this.canvas.width - 40, this.canvas.height - this.waterMarkArea + 5, 30, 30);
+    ctx.fillStyle = "#313131";
     ctx.textAlign = "right";
-    ctx.font = `400 18px Arial, Impact`;
-    ctx.fillText(document.location.hostname, this.canvas.width - 10, this.canvas.height - (this.waterMarkArea/3) );
+    ctx.font = `600 14px Noto Sans KR`;
+    ctx.fillText(`onMeme.com`, this.canvas.width - 50, this.canvas.height - (this.waterMarkArea/3) );
+    ctx.fillStyle = "#111";
+    ctx.fillText(`Meme.com`, this.canvas.width - 50, this.canvas.height - (this.waterMarkArea/3) );
+
+    ctx.beginPath();
+    ctx.setLineDash([5, 10]);
+    ctx.moveTo(0, this.canvas.height - this.waterMarkArea + 1);
+    ctx.lineTo(this.canvas.width, this.canvas.height - this.waterMarkArea + 1);
+    ctx.stroke();
+    ctx.setLineDash([]);
   }
 
   _setFontFamily(isSerifFont) {
@@ -282,6 +339,8 @@ class MemeEditor extends Component {
     // const isNew = item.id === 'New MEME';
     // Should be re-render with ratio
     const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
+    // const watermarkMargin = 1;
+    // console.warn(this.state.ratio, this.image.height)
 
     return (
       <div className="meme-editor">
@@ -295,33 +354,45 @@ class MemeEditor extends Component {
             </div>
           </div>
           <div className="canvas-caption">
-            <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
-            <div className="field">
+            <FormControlLabel 
+              className="expanded-checkbox"
+              control={<Checkbox
+                  onChange={() => this._checkExpand('checkedB')}
+                  inputRef={checkbox => this.expandCheckbox = checkbox}
+                  value="expand"
+                />
+              } label="Expand"
+            />
+
+            <div className="field field-first">
               <TextField label="Top Text" inputRef={input => this.topText = input} multiline rows="4" margin="normal"
-                onChange={() => this.drawCanvas()} />
+                onChange={input => this.drawCanvas()} />
               <div className="handler-fontsize">
-                <Button dense ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('top', -1, true)}>
+                <Button dense ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('TOP', -1, true)}>
                   <span className="decrease-font-size">A</span>
                 </Button>
                 <span className="divider"></span>
-                <Button dense ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('top', 1, true)}>
+                <Button dense ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('TOP', 1, true)}>
                   <span className="increase-font-size">A</span>
                 </Button>
               </div>
             </div>
-            <div className="field">
+            <div className="field field-last">
               <TextField label="Bottom Text" inputRef={input => this.bottomText = input} multiline rows="4" margin="normal"
-                onChange={() => this.drawCanvas()} />
+                onChange={input => this.drawCanvas()} />
               <div className="handler-fontsize">
-                <Button dense ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('bot', -1, true)}>
+                <Button dense ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('BOT', -1, true)}>
                   <span className="decrease-font-size">A</span>
                 </Button>
                 <span className="divider"></span>
-                <Button dense ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('bot', 1, true)}>
+                <Button dense ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('BOT', 1, true)}>
                   <span className="increase-font-size">A</span>
                 </Button>
               </div>
             </div>
+
+            <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
+            
             <div className="generate-image">
               <a href="#" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
                 <Button raised color="accent" className="full-button">
