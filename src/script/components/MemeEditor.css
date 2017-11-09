@@ -27,6 +27,9 @@
   position: relative;
   margin: 0;
 }
+.canvas-caption .field > div:first-child {
+  margin-top: 0;
+}
 .canvas-caption .field label {
   left: 5px;
 }
@@ -88,9 +91,6 @@
     z-index: 10;
     margin-left: 10px;
     display: flex;
-  }
-  .canvas-caption .field > div:first-child {
-    margin-top: 0;
   }
   .canvas-caption .field-first {top: 0;}
   .canvas-caption .field-last {bottom: 76px;}

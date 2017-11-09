@@ -6,7 +6,9 @@
   width: 150px;
   height: 150px;
   font: 400 14px Arial;
+  background-position: center center;
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .item-anchor {
