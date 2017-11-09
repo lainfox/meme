@@ -1,0 +1,11 @@
+.upload-component {
+  position: relative;
+  display: inline-block;
+}
+.upload-input {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  width: 175px;
+  height: 36px;
+}

@@ -31,8 +31,6 @@ class FontSwtich extends Component {
   };
 
   render() {
-    const {fontFamily} = this.props;
-
     return (
       <div className="font-switcher">
       	<label>

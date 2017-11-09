@@ -1,7 +1,14 @@
 /*@import url(//fonts.googleapis.com/earlyaccess/nanumgothic.css);*/
-@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import url(//fonts.googleapis.com/css?family=Droid+Serif:700);
- 
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 600;
+   src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -9,3 +16,15 @@ body {
 }
 
 a {text-decoration: none;}
+
+.container {
+  width: 970px;
+  min-width: 320px;
+	margin: 0 auto;
+}
+
+@media screen and (max-width:479px) {
+  .container {
+    width: auto;
+  }
+}

@@ -1,0 +1,13 @@
+.create-component {
+  
+}
+.create-component h1 {
+  margin: 5px 10px;
+  font-size: 1.2em;
+}
+
+@media screen and (max-width:479px) {
+  .create-component h1 {
+    display: none;
+  }
+}
