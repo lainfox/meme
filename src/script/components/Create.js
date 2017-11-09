@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Adsense from '../components/Adsense';
 import MemeEditor from './MemeEditor';
+import './create.css';
 
 const CANVAS_WIDTH = 600;
 

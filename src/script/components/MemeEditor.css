@@ -1,22 +1,22 @@
 
 .blob-canvas {
+  position: relative;
   display: flex;
   /*justify-content: center;*/
   align-items: flex-start;
-  margin: 20px 0 0;
+  margin: 0;
 }
 .canvas-area {
   overflow: hidden;
 }
 .canvas-cover {
   position: relative;
-  min-height: 200px;
+  min-height: 140px;
 }
 .canvas-cover canvas {
   /*position: relative;*/
   display: block;
   width: 600px;
-  max-width: 600px;
 }
 
 .canvas-caption {
@@ -38,6 +38,9 @@
   height: 66px;
   font: 14px/1.5 'Noto Sans KR', sans-serif;
   background-color: rgba(0,0,0, .05);
+}
+.canvas-caption .expanded-checkbox {
+
 }
 .canvas-caption .handler-fontsize {
   text-align: right;
@@ -68,3 +71,48 @@
   background-color: rgba(0, 0, 0, 0.12);
 }
 
+@media screen and (max-width:479px) {
+  .blob-canvas {flex-direction: column-reverse;}
+
+  .canvas-area {margin: 78px 0 154px;}
+  .canvas-cover canvas {
+    max-width: 100%;
+  }
+  .canvas-caption {
+    position: absolute;
+    margin: 0 4px;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-color: transparent;
+  }
+  .canvas-caption .field {
+    position: absolute;
+    z-index: 10;
+    margin-left: 10px;
+    display: flex;
+  }
+  .canvas-caption .field > div:first-child {
+    margin-top: 0;
+  }
+  .canvas-caption .field-first {top: 0;}
+  .canvas-caption .field-last {bottom: 76px;}
+  .canvas-caption .expanded-checkbox {
+    position: absolute;
+    left: 10px;
+    bottom: 35px;
+  }
+  .canvas-caption .generate-image {
+    position: absolute;
+    bottom: 0;
+    margin-top: 0;
+    width: 100%;
+  }
+  .canvas-caption .handler-fontsize {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .canvas-caption .divider {display: none}
+  .canvas-caption textarea {
+    width: calc(100vw - 70px);
+    height: 40px;
+  }
+}
