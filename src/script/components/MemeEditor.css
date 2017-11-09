@@ -39,9 +39,8 @@
   font: 14px/1.5 'Noto Sans KR', sans-serif;
   background-color: rgba(0,0,0, .05);
 }
-.canvas-caption .expanded-checkbox {
-
-}
+.canvas-caption .expanded-checkbox {}
+.canvas-caption .expanded-checkbox > span:first-child {height: 24px;}
 .canvas-caption .handler-fontsize {
   text-align: right;
 }
@@ -98,7 +97,7 @@
   .canvas-caption .expanded-checkbox {
     position: absolute;
     left: 10px;
-    bottom: 35px;
+    bottom: 48px;
   }
   .canvas-caption .generate-image {
     position: absolute;

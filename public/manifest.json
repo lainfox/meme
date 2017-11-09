@@ -1,6 +1,6 @@
 {
   "short_name": "On Meme",
-  "name": "On Meme · Global Meme Generator",
+  "name": "On Meme · Meme Generator",
   "icons": [
     {
       "src": "favicon-196x196.png",
@@ -8,7 +8,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/?utm_source=web_app_manifest",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
