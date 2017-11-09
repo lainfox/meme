@@ -66,11 +66,9 @@ class MemeEditor extends Component {
 
     // History back comes from upload uri
     if (!this.props.item.image && nextProps.item.image) {
-      this.image.src = nextProps.item.imgur
-      this._prepareNewImageAndCanvas(this.image)
+      this._prepareNewImageAndCanvas(nextProps.item.imgur)
     } else if (nextProps.uploadFile && !this.props.item.image && !nextProps.item.image) {
-      this.image.src = nextProps.uploadFile;
-      this._prepareNewImageAndCanvas(this.image)
+      this._prepareNewImageAndCanvas(nextProps.uploadFile)
     }
   }
 
@@ -90,7 +88,7 @@ class MemeEditor extends Component {
   }
 
   _prepareNewImageAndCanvas(newImage) {
-    this.image = newImage;
+    this.image.src = newImage;
     this._setupCanvas()
   }
 
