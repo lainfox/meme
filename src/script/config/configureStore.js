@@ -12,17 +12,26 @@ const enhancers = []
 const loggerMiddleware = createLogger()
 const middleware = [
   thunkMiddleware,
-  loggerMiddleware,
+  // loggerMiddleware,
   routerMiddleware(history)
 ]
 
 if (process.env.NODE_ENV === 'development') {
-  const devToolsExtension = window.devToolsExtension
-
-  if (typeof devToolsExtension === 'function') {
-    enhancers.push(devToolsExtension())
-  }
+  middleware.push(loggerMiddleware);
 }
+
+// enhancers.push(
+//   reactReduxFirebase(firebaseConfig, reduxFirebaseConfig)
+// );
+
+// if (process.env.NODE_ENV === 'development') {
+//   const devToolsExtension = window.devToolsExtension
+
+//   if (typeof devToolsExtension === 'function') {
+//     enhancers.push(devToolsExtension())
+//   }
+// }
+
 
 const composedEnhancers = compose(
   applyMiddleware(...middleware),

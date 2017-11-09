@@ -1,0 +1,63 @@
+{
+  "memes" : [ {
+    "category" : "hi",
+    "height" : 443,
+    "id" : "Welcome",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FWelcome.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "yes",
+    "height" : 600,
+    "id" : "Success-Kid",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSuccess-Kid.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "yes",
+    "height" : 445,
+    "id" : "Third-World-Success-Kids",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FThird-World-Success-Kids.jpg?alt=media",
+    "width" : 500
+  }, {
+    "category" : "what",
+    "height" : 439,
+    "id" : "Awkward-Moment-Seal",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FAwkward-Moment-Seal.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "Suspicious-Fry",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSuspicious-Fry.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "One-Does-Not-Simply",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FOne-Does-Not-Simply.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 620,
+    "id" : "Dont-Talk-To-Me",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FDont-Talk-To-Me.jpg?alt=media",
+    "width" : 620
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "Painful-guy",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FPainful-Guy.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "what",
+    "height" : 600,
+    "id" : "Annoying-Facebook-Girl",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FAnnoying-Facebook-Girl.jpg?alt=media",
+    "width" : 600
+  }, {
+    "category" : "happy",
+    "height" : 445,
+    "id" : "Seal-of-Approval",
+    "image" : "https://firebasestorage.googleapis.com/v0/b/meme-653c0.appspot.com/o/memes%2FSeal-of-Approval.jpg?alt=media",
+    "width" : 600
+  } ]
+}

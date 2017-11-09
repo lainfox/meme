@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://onmeme.com", "http://localhost"],
+    "responseHeader": ["Content-Type"],
+    "method": ["GET", "HEAD", "DELETE"],
+    "maxAgeSeconds": 3600
+  }
+]
