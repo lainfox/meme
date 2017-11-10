@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import Root from "./script/containers/Root";
 import registerServiceWorker from './script/registerServiceWorker';
+import 'babel-polyfill';
 import GA from "react-ga";
 import './script/index.css';
 
