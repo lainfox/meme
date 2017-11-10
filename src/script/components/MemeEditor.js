@@ -23,7 +23,7 @@ import './MemeEditor.css';
 const FONT_FAMILY = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
 const FONT_SIZE_ARRAY = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300];
 const FONT_SIZE_DEFAULT_INDEX = 3;
-const WATER_MARK_AREA = 40;
+const WATER_MARK_AREA = 30;
 const CANVAS_MAX_WIDTH = (window.outerWidth < 600) ? window.outerWidth : 600;
 const LINE_HEIGHT = 1.2;
 const TOP_DEFAULT_TEXT = 'Top text';
@@ -306,16 +306,20 @@ class MemeEditor extends Component {
     ctx.strokeStyle = "#909090";
     ctx.fillRect(0, this.canvas.height - this.waterMarkArea, this.canvas.width, this.canvas.height);
 
-    ctx.drawImage(img, this.canvas.width - 40, this.canvas.height - this.waterMarkArea + 5, 30, 30);
+    ctx.save();
+    ctx.globalAlpha = 0.4;
+    ctx.drawImage(img, this.canvas.width - 26, this.canvas.height - this.waterMarkArea + 4, 24, 24);
+    ctx.restore();
+
     ctx.fillStyle = "#313131";
     ctx.textAlign = "right";
     ctx.font = `600 14px Noto Sans KR`;
-    ctx.fillText(`onMeme.com`, this.canvas.width - 50, this.canvas.height - (this.waterMarkArea/3) );
+    ctx.fillText(`onMeme.com`, this.canvas.width - 30, this.canvas.height - (this.waterMarkArea/3) + 2);
     ctx.fillStyle = "#111";
-    ctx.fillText(`Meme.com`, this.canvas.width - 50, this.canvas.height - (this.waterMarkArea/3) );
+    ctx.fillText(`Meme.com`, this.canvas.width - 30, this.canvas.height - (this.waterMarkArea/3) + 2);
 
     ctx.beginPath();
-    ctx.setLineDash([5, 10]);
+    ctx.setLineDash([5, 6]);
     ctx.moveTo(0, this.canvas.height - this.waterMarkArea + 1);
     ctx.lineTo(this.canvas.width, this.canvas.height - this.waterMarkArea + 1);
     ctx.stroke();
@@ -348,8 +352,8 @@ class MemeEditor extends Component {
   render() {
     // const isNew = item.id === 'New MEME';
     // Should be re-render with ratio
-    const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
-    // const watermarkMargin = 1;
+    // const watermarkMargin = -1 * this.state.ratio * this.waterMarkArea;
+    const watermarkMargin = 1;
     // console.warn(this.state.ratio, this.image.height)
 
     return (
