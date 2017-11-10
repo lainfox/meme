@@ -294,7 +294,7 @@ class MemeEditor extends Component {
     const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0));
 
     if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
-      window.navigator.msSaveOrOpenBlob(blob, fileName);
+      window.navigator.msSaveOrOpenBlob(blob, `${fileName}.jpg`);
     } else {
       this.saveButton.href = URL.createObjectURL(blob);
       this.saveButton.download = fileName;
