@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from "react-redux";
-import Button from 'material-ui/Button';
+import RaisedButton from 'material-ui/RaisedButton';
 import {upload} from '../actions/upload';
 import './upload.css';
 
@@ -31,7 +31,7 @@ class Upload extends PureComponent {
   render() {
     return (
       <div className="upload-component">
-        <Button raised color="accent" onClick={() => this.triggerClick()}>Upload new image</Button>
+        <RaisedButton secondary={true} onClick={() => this.triggerClick()}>Upload new image</RaisedButton>
         <input type="file" ref={input => this.inputFile = input} className="upload-input" accept="image/*"
           onChange={ev => this.readImageFromFile(ev)}
           onClick={ev => ev.target.value = null} />

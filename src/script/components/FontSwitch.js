@@ -1,19 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import green from 'material-ui/colors/green';
-import Switch from 'material-ui/Switch';
+import Toggle from 'material-ui/Toggle';
 import './fontSwitcher.css';
-
-const styles = {
-  bar: {},
-  checked: {
-    color: green[500],
-    '& + $bar': {
-      backgroundColor: green[500],
-    },
-  },
-};
 
 class FontSwtich extends Component {
 	static propTypes = {
@@ -21,8 +10,11 @@ class FontSwtich extends Component {
 	  onChangeFunc: PropTypes.func.isRequired
 	};
 
-	state = {
-    fontFamily: this.props.fontFamily === 'serif',
+  constructor(props) {
+    super(props);
+  	this.state = {
+      fontFamily: props.fontFamily === 'serif',
+    }
   }
 
   handleChange = name => (event, checked) => {
@@ -35,9 +27,8 @@ class FontSwtich extends Component {
       <div className="font-switcher">
       	<label>
           <span>Sans Serif</span>
-	        <Switch
-	          checked={this.state.fontFamily}
-	          onChange={this.handleChange('fontFamily')}
+	        <Toggle
+	          onToggle={this.handleChange('fontFamily')}
 	          aria-label="fontFamily"
 	        />
           <span>Serif</span>
@@ -47,5 +38,5 @@ class FontSwtich extends Component {
   }
 }
 
-export default withStyles(styles)(FontSwtich);
+export default FontSwtich;
 // export default FontSwtich;

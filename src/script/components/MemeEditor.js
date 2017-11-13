@@ -10,11 +10,11 @@ import shortId from 'shortid';
 
 import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
-import {CircularProgress} from 'material-ui/Progress';
+import CircularProgress from 'material-ui/CircularProgress';
 import TextField from 'material-ui/TextField';
-import {FormControlLabel} from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
-import Button from 'material-ui/Button';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import './MemeEditor.css';
 
 // CORS 에러로 안되는 이미지들
@@ -147,11 +147,12 @@ class MemeEditor extends Component {
     const bottomTextInput = this.bottomText.value || (makeEmptyText ? '' : BOT_DEFAULT_TEXT);
     const bottomTextLines = this.wrapText(ctx, bottomTextInput, maxWidth, 'BOT');
 
-    this.buildCanvasHeight(ctx, this.expandCheckbox.checked, bottomTextLines);
+    const isExpanded = this.state.expand;
+    this.buildCanvasHeight(ctx, isExpanded, bottomTextLines);
 
     this.buildImage(this.image);
     this.drawTextRightNow(ctx, topTextLines, this.canvas.width/2, 14, maxWidth, 'TOP');
-    this.drawTextRightNow(ctx, bottomTextLines, this.canvas.width/2, (this.canvas.height - this.waterMarkArea) - 20, maxWidth, 'BOT', this.expandCheckbox.checked);
+    this.drawTextRightNow(ctx, bottomTextLines, this.canvas.width/2, (this.canvas.height - this.waterMarkArea) - 20, maxWidth, 'BOT', isExpanded);
     this.buildWaterMark();
   }
 
@@ -170,8 +171,11 @@ class MemeEditor extends Component {
     ctx.drawImage(image, 0, 0, this.canvas.width, this.image.height);
   }
 
-  _checkExpand(checkbox) {
-    this.drawCanvas();
+  _checkExpand(checked) {
+    // console.warn(this.expandCheckbox.state.switched, checked)
+    this.setState({expand: checked}, () => {
+      this.drawCanvas();
+    });
   }
 
   /* Related to TEXT */
@@ -226,10 +230,10 @@ class MemeEditor extends Component {
     }
 
     // Set default text as Alpha
-    if (lines[0] === TOP_DEFAULT_TEXT + ' ' && !this.topText.value.trim()) {
+    if (lines[0] === TOP_DEFAULT_TEXT + ' ' && !this.topText.value) {
       ctx.save();
       ctx.globalAlpha = 0.7;
-    } else if (lines[0] === BOT_DEFAULT_TEXT + ' ' && !this.bottomText.value.trim()) {
+    } else if (lines[0] === BOT_DEFAULT_TEXT + ' ' && !this.bottomText.value) {
       ctx.save();
       ctx.globalAlpha = 0.7;
     }
@@ -287,7 +291,7 @@ class MemeEditor extends Component {
   
   saveImage(ev) {
     const fileName = `${this._getUrlSlug()}.jpg`;
-    
+
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
     }
@@ -297,8 +301,8 @@ class MemeEditor extends Component {
     if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
       window.navigator.msSaveOrOpenBlob(blob, fileName);
     } else {
-      this.saveButton.download = fileName;
       this.saveButton.href = URL.createObjectURL(blob);
+      this.saveButton.download = fileName;
     }
 
     GA.event({
@@ -334,11 +338,11 @@ class MemeEditor extends Component {
     ctx.fillText(`Meme.com`, this.canvas.width - 30, this.canvas.height - (this.waterMarkArea/3) + 2);
 
     ctx.beginPath();
-    ctx.setLineDash([5, 6]);
+    if (ctx.setLineDash) ctx.setLineDash([5, 6]);
     ctx.moveTo(0, this.canvas.height - this.waterMarkArea + 1);
     ctx.lineTo(this.canvas.width, this.canvas.height - this.waterMarkArea + 1);
     ctx.stroke();
-    ctx.setLineDash([]);
+    if (ctx.setLineDash) ctx.setLineDash([]);
   }
 
   _setFontFamily(isSerifFont) {
@@ -383,40 +387,37 @@ class MemeEditor extends Component {
             </div>
           </div>
           <div className="canvas-caption">
-            <FormControlLabel 
+            <Checkbox
               className="expanded-checkbox"
-              control={<Checkbox
-                  onChange={() => this._checkExpand('checkedB')}
-                  inputRef={checkbox => this.expandCheckbox = checkbox}
-                  value="expand"
-                />
-              } label="Expand"
+              label="Expand"
+              ref={checkbox => this.expandCheckbox = checkbox}
+              onCheck={(ev) => this._checkExpand(ev.target.checked)}
             />
-
+            
             <div className="field field-first">
-              <TextField label="Top Text" inputRef={input => this.topText = input} multiline rows="4" margin="normal"
-                onChange={input => this.drawCanvas()} />
+              <textarea id="topTextField" placeholder="Top Text" ref={input => this.topText = input}
+                onChange={input => this.drawCanvas()}></textarea>
               <div className="handler-fontsize">
-                <Button dense ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('TOP', -1, true)}>
+                <FlatButton ref={button => this.topTextDecrease = button} onClick={() => this.setFontSize('TOP', -1, true)}>
                   <span className="decrease-font-size">A</span>
-                </Button>
+                </FlatButton>
                 <span className="divider"></span>
-                <Button dense ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('TOP', 1, true)}>
+                <FlatButton ref={button => this.topTextIncrease = button} onClick={() => this.setFontSize('TOP', 1, true)}>
                   <span className="increase-font-size">A</span>
-                </Button>
+                </FlatButton>
               </div>
             </div>
             <div className="field field-last">
-              <TextField label="Bottom Text" inputRef={input => this.bottomText = input} multiline rows="4" margin="normal"
-                onChange={input => this.drawCanvas()} />
+              <textarea id="botTextField" placeholder="Bottom Text" ref={input => this.bottomText = input}
+                onChange={input => this.drawCanvas()}></textarea>
               <div className="handler-fontsize">
-                <Button dense ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('BOT', -1, true)}>
+                <FlatButton ref={button => this.botTextDecrease = button} onClick={() => this.setFontSize('BOT', -1, true)}>
                   <span className="decrease-font-size">A</span>
-                </Button>
+                </FlatButton>
                 <span className="divider"></span>
-                <Button dense ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('BOT', 1, true)}>
+                <FlatButton ref={button => this.botTextIncrease = button} onClick={() => this.setFontSize('BOT', 1, true)}>
                   <span className="increase-font-size">A</span>
-                </Button>
+                </FlatButton>
               </div>
             </div>
 
@@ -424,9 +425,9 @@ class MemeEditor extends Component {
             
             <div className="generate-image">
               <a href="#" id="saveImage" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
-                <Button raised color="accent" className="full-button">
+                <RaisedButton secondary={true} className="full-button">
                 Save image
-                </Button>
+                </RaisedButton>
               </a>
             </div>
           </div>

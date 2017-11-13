@@ -5,8 +5,14 @@
 .font-switcher label {
 	cursor: pointer;
 }
-.font-switcher label span,
-.font-switcher label div {
+.font-switcher label span {
+  display: inline-block;
+  vertical-align: top;
+}
+.font-switcher label > div {
+  display: inline-block !important;
+  margin: 0 10px;
+  width: auto !important;
 	vertical-align: middle;
 }
 

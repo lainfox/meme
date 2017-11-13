@@ -25,7 +25,7 @@
 }
 .canvas-caption .field {
   position: relative;
-  margin: 0;
+  margin: 10px 0;
 }
 .canvas-caption .field > div:first-child {
   margin-top: 0;
@@ -36,19 +36,21 @@
 .canvas-caption textarea {
   display: block;
   margin: -6px 0 -7px;
-  padding: 6px;
+  padding: 6px !important;
   width: 270px;
   height: 66px;
+  border: none;
   font: 14px/1.5 'Noto Sans KR', sans-serif;
-  background-color: rgba(0,0,0, .05);
+  background-color: rgba(0,0,0, .05) !important;
 }
 .canvas-caption .expanded-checkbox {}
 .canvas-caption .expanded-checkbox > span:first-child {height: 24px;}
 .canvas-caption .handler-fontsize {
+  margin: 10px 0;
   text-align: right;
 }
 .canvas-caption .handler-fontsize button {
-  min-width: 36px;
+  min-width: 36px !important;
   vertical-align: middle;
 }
 .canvas-caption .decrease-font-size {
@@ -62,7 +64,12 @@
 }
 .canvas-caption .full-button {
   width: 100%;
+  color: #FFF !important;
 }
+.canvas-caption .full-button button {
+  color: #FFF !important;
+}
+
 
 .divider {
   display: inline-block;
@@ -76,7 +83,7 @@
 @media screen and (max-width:479px) {
   .blob-canvas {flex-direction: column-reverse;}
 
-  .canvas-area {margin: 78px 0 154px;}
+  .canvas-area {margin: 100px 0 164px;}
   .canvas-cover canvas {
     max-width: 100%;
   }
@@ -89,15 +96,16 @@
   .canvas-caption .field {
     position: absolute;
     z-index: 10;
-    margin-left: 10px;
+    margin: 0 0 0 10px;
     display: flex;
   }
-  .canvas-caption .field-first {top: 0;}
+  .canvas-caption .field-first {top: 10px;}
   .canvas-caption .field-last {bottom: 76px;}
   .canvas-caption .expanded-checkbox {
-    position: absolute;
+    position: absolute !important;
+    z-index: 100;
     left: 10px;
-    bottom: 48px;
+    bottom: 44px;
   }
   .canvas-caption .generate-image {
     position: absolute;
@@ -108,10 +116,12 @@
   .canvas-caption .handler-fontsize {
     display: flex;
     flex-direction: column-reverse;
+    margin: 5px 0;
   }
   .canvas-caption .divider {display: none}
   .canvas-caption textarea {
-    width: calc(100vw - 70px);
-    height: 40px;
+    margin-top: 5px;
+    padding: 0 10px !important;
+    width: calc(100vw - 70px) !important;
   }
 }

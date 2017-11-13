@@ -2,10 +2,22 @@
   position: relative;
   display: inline-block;
 }
+.upload-component button {
+  padding: 0 10px !important;
+  color: #FFF !important;
+}
 .upload-input {
   position: absolute;
   z-index: 1;
   opacity: 0;
   width: 175px;
   height: 36px;
+}
+
+@media screen and (max-width:479px) {
+  .upload-component {
+    float: right;
+    vertical-align: top;
+    margin-top: 3px;
+  }
 }
