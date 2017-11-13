@@ -285,7 +285,7 @@ class MemeEditor extends Component {
   }
   
   saveImage(ev) {
-    const fileName = this._getUrlSlug();
+    const fileName = `${this._getUrlSlug()}.jpg`;
     
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
@@ -294,7 +294,7 @@ class MemeEditor extends Component {
     const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0));
 
     if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
-      window.navigator.msSaveOrOpenBlob(blob, `${fileName}.jpg`);
+      window.navigator.msSaveOrOpenBlob(blob, fileName);
     } else {
       this.saveButton.href = URL.createObjectURL(blob);
       this.saveButton.download = fileName;
