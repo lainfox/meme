@@ -17,6 +17,14 @@ body {
 
 a {text-decoration: none;}
 
+.browser-upgrade {
+  padding: 11px 12px 11px 30px;
+  text-align: left;
+  font: 17px/1.7 Calibri,Helvetica,Arial,sans-serif;
+  border-bottom: 1px solid #A29330;
+  background-color: #fff8ea;
+}
+
 .container {
   width: 970px;
   min-width: 320px;
