@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import routes from '../config/routes';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Upload from '../components/Upload';
 import Adsense from '../components/Adsense';
 import logo from './logo.png';
@@ -9,6 +10,7 @@ import './App.css';
 class App extends Component {
   render() {
     return (
+      <MuiThemeProvider>
       <div className="App">
         <header className="App-header">
           <div className="container">
@@ -29,6 +31,7 @@ class App extends Component {
           </ul>
         </footer>
       </div>
+      </MuiThemeProvider>
     );
   }
 }
