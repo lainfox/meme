@@ -6,7 +6,7 @@ import GA from "react-ga";
 import * as slugify  from 'url-slug';
 // import {slugify} from 'transliteration';
 import shortId from 'shortid';
-
+import imgur from '../../vendor/imgur';
 
 import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
@@ -305,6 +305,11 @@ class MemeEditor extends Component {
       this.saveButton.download = fileName;
     }
 
+    imgur.post( this.getBase64Image(this.canvas) ).then(res => {
+      console.warn(res);
+    })
+
+
     GA.event({
       category: 'create',
       action: 'save',
@@ -352,21 +357,15 @@ class MemeEditor extends Component {
     this.drawCanvas();
   }
 
-  // getBase64Image(img) {
-  //   const canvas = this.canvas;
-
-  //   // Get the data-URL formatted image
-  //   // Firefox supports PNG and JPEG. You could check img.src to
-  //   // guess the original format, but be aware the using "image/jpg"
-  //   // will re-encode the image.
-  //   const dataURL = canvas.toDataURL();
-
-  //   const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-  //   console.warn(base64);
-  //   return base64;
-  // }
-  // 
-  // 
+  getBase64Image(canvas) {
+    // const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+    // const base64 = dataURL.replace(/^data:image\/(png|jpeg);base64,/, "");
+    // return base64;
+    
+    return canvas.toDataURL('image/jpeg', 1.0).split(',')[1];
+  }
+  
+  
 
   render() {
     // const isNew = item.id === 'New MEME';
