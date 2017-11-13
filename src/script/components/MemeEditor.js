@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {push} from 'react-router-redux'
 import dataURLtoBlob from 'blueimp-canvas-to-blob';
 import GA from "react-ga";
-import urlSlug from 'url-slug';
+import * as slugify  from 'url-slug';
+// import {slugify} from 'transliteration';
 import shortId from 'shortid';
 
 
@@ -281,7 +282,7 @@ class MemeEditor extends Component {
       return shortId.generate()
     }
 
-    return urlSlug(title);
+    return slugify(title);
   }
   
   saveImage(ev) {
@@ -296,8 +297,8 @@ class MemeEditor extends Component {
     if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
       window.navigator.msSaveOrOpenBlob(blob, fileName);
     } else {
-      this.saveButton.href = URL.createObjectURL(blob);
       this.saveButton.download = fileName;
+      this.saveButton.href = URL.createObjectURL(blob);
     }
 
     GA.event({
