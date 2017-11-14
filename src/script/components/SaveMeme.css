@@ -1,0 +1,63 @@
+
+.uploaded-component {
+}
+.save-image-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+.save-image-area {
+  overflow: hidden;
+}
+.save-image-cover {
+  position: relative;
+  min-height: 140px;
+}
+.save-image-cover img {
+  display: block;
+  width: 400px;
+}
+
+.save-image-info {
+  margin-left: 50px;
+}
+.input-imageUrl {
+  vertical-align: top;
+  margin-right: -5px;
+  padding: 0 0 0 10px;
+  width: 220px;
+  height: 36px;
+  font-size: 13px;
+  line-height: 1;
+  color: #e2e2e2;
+  background-color: #797979;
+  border: 0;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.button-imageUrl-copy button {
+  border-bottom-right-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+}
+.hidden {
+  display: none;
+}
+
+
+@media screen and (max-width:479px) {
+  .uploaded-component {
+    margin: 0 5px;
+  }
+  .save-image-wrapper {
+    display: block;
+  }
+  .save-image-cover img {
+    max-width: 100%;
+  }
+  .save-image-info {
+    margin: 0;
+  }
+  .howTo {
+    display: none;
+  }
+}
