@@ -3,8 +3,6 @@
   display: inline-block;
 }
 .upload-component button {
-  padding: 0 10px !important;
-  color: #FFF !important;
 }
 .upload-input {
   position: absolute;
