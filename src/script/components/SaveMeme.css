@@ -1,5 +1,9 @@
-.hidden {
-  display: none;
+
+.uploaded-component {
+}
+.save-image-wrapper {
+  display: flex;
+  flex-direction: row;
 }
 .save-image-area {
   overflow: hidden;
@@ -10,9 +14,12 @@
 }
 .save-image-cover img {
   display: block;
-  width: 600px;
+  width: 400px;
 }
 
+.save-image-info {
+  margin-left: 50px;
+}
 .input-imageUrl {
   vertical-align: top;
   margin-right: -5px;
@@ -31,4 +38,26 @@
 .button-imageUrl-copy button {
   border-bottom-right-radius: 5px !important;
   border-top-right-radius: 5px !important;
+}
+.hidden {
+  display: none;
+}
+
+
+@media screen and (max-width:479px) {
+  .uploaded-component {
+    margin: 0 5px;
+  }
+  .save-image-wrapper {
+    display: block;
+  }
+  .save-image-cover img {
+    max-width: 100%;
+  }
+  .save-image-info {
+    margin: 0;
+  }
+  .howTo {
+    display: none;
+  }
 }

@@ -34,30 +34,34 @@ class SaveMeme extends Component {
     return (
       <div className="uploaded-component">
         <h2>Save your meme.</h2>
-
-        <p>ID: {imgurId}</p>
-        <div className="save-image-area">
-          <div className="save-image-cover" style={{marginBottom: `${watermarkMargin}px`}}>
-            <img src={imgurLink} alt={`${memeId} - ${imgurId}`} />
+        <div className="save-image-wrapper">
+          <div className="save-image">
+            <p>ID: {imgurId}</p>
+            <div className="save-image-area">
+              <div className="save-image-cover" style={{marginBottom: `${watermarkMargin}px`}}>
+                <img src={imgurLink} alt={`${memeId} - ${imgurId}`} />
+              </div>
+            </div>
           </div>
-        </div>
+          <div className="save-image-info">
+            <h3>Direct image link</h3>
+            <div className="copywrapper">
+              <input type="text" ref={input => this.imageUrl = input} value={imgurLink} className="input-imageUrl" readOnly onClick={ev => ev.target.select()} />
+              <RaisedButton className="button-imageUrl-copy" label="Copy URL" primary={true} onClick={() => this.copyToClipboard(this.imageUrl.value)} />
+            </div>
 
-        <h3>Direct image link</h3>
-        <div className="copywrapper">
-          <input type="text" ref={input => this.imageUrl = input} value={imgurLink} className="input-imageUrl" readOnly onClick={ev => ev.target.select()} />
-          <RaisedButton className="button-imageUrl-copy" label="Copy URL" primary={true} onClick={() => this.copyToClipboard(this.imageUrl.value)} />
-        </div>
-
-        <h3>How to use: </h3>
-        <ul>
-          <li>Right mouse click on the images → Select "Download image to disk." or "Save this image as."</li>
-          <li>Click "COPY URL" to copy URL → Paste URL in comments.</li>
-        </ul>
-        <div className="hidden">
-          <p>DeleteHash: {imgurDeleteHash}</p>
-          <p>{memeId}</p>
-          <p>{topText}</p>
-          <p>{botText}</p>
+            <h3 className="howTo">How to use: </h3>
+            <ul className="howTo">
+              <li>Right mouse click on the images → Select "Download image to disk." or "Save this image as."</li>
+              <li>Click "COPY URL" to copy URL → Paste URL in comments.</li>
+            </ul>
+            <div className="hidden">
+              <p>DeleteHash: {imgurDeleteHash}</p>
+              <p>{memeId}</p>
+              <p>{topText}</p>
+              <p>{botText}</p>
+            </div>
+          </div>
         </div>
       </div>
     )

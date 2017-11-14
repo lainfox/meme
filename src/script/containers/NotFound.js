@@ -8,7 +8,7 @@ export default () => (
     <h1>Oooooops!!</h1>
     
     <Link to="/" className="item-anchor">
-      <img src="https://i.imgur.com/8uV3ZDw.jpg" alt="404 Not Found" />
+      <img src="https://i.imgur.com/8uV3ZDw.jpg" alt="404 Not Found" border="0" />
       <h2>&gt; Go to Home</h2>
     </Link>
 

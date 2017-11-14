@@ -24,7 +24,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "shortid": "^2.2.8",
-    "url-slug": "^2.0.0",
+    "url-slug": "git+https://github.com/lainfox/url-slug.git#3b94a6ff4fd23b0e88d8f4f567d8098d784a5c93",
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
