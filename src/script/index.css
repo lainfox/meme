@@ -15,7 +15,13 @@ body {
   font: 14px/1.5 'Noto Sans KR', sans-serif;
 }
 
-a {text-decoration: none;}
+a {
+  color: #0F74BD;
+  text-decoration: none;
+}
+a:hover {
+  color: #3af;
+}
 
 .browser-upgrade {
   padding: 11px 12px 11px 30px;

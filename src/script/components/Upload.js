@@ -31,7 +31,7 @@ class Upload extends PureComponent {
   render() {
     return (
       <div className="upload-component">
-        <RaisedButton secondary={true} onClick={() => this.triggerClick()}>Upload new image</RaisedButton>
+        <RaisedButton label="Upload new image" secondary={true} onClick={() => this.triggerClick()} />
         <input type="file" ref={input => this.inputFile = input} className="upload-input" accept="image/*"
           onChange={ev => this.readImageFromFile(ev)}
           onClick={ev => ev.target.value = null} />

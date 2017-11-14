@@ -469,15 +469,10 @@ class MemeEditor extends Component {
             
             <div className="generate-image">
               {this.state.saveAndUploading &&
-                <CircularProgress className="saveImageProgress" style={{ position: 'absolute', left: '50%', margin: '40px 0 0 -20px', color: 'grey' }} />
+                <CircularProgress className="saveImageProgress" style={{ position: 'absolute', zIndex: 2, left: '50%', margin: '16px 0 0 -20px', color: 'grey' }} />
               }
-              <RaisedButton secondary={true} disabled={this.state.saveAndUploading} id="saveImage" className="full-button" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
-              Save image
-              </RaisedButton>
-              {/*
-              <a href="#" id="saveImage" >
-              </a>
-              */}
+              <RaisedButton label="Save image" secondary={true} disabled={this.state.saveAndUploading} id="saveImage"
+                className="full-button" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)} />
             </div>
           </div>
         </div>

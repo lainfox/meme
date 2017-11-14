@@ -1,0 +1,15 @@
+.not-found {
+	margin: 0 10px;
+}
+.not-found h1 {
+	margin: 0 0 .3em;
+	font-size: 1.3em;
+}
+.not-found h2 {
+	margin: 0 0 .3em;
+	font-size: 1.2em;
+}
+.not-found img {
+	max-width: 100%;
+	border: none;
+}

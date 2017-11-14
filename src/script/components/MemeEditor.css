@@ -84,7 +84,7 @@
 @media screen and (max-width:479px) {
   .blob-canvas {flex-direction: column-reverse;}
 
-  .canvas-area {margin: 100px 0 164px;}
+  .canvas-area {margin: 100px 5px 180px;}
   .canvas-cover canvas {
     max-width: 100%;
   }
@@ -100,19 +100,18 @@
     margin: 0 0 0 10px;
     display: flex;
   }
-  .canvas-caption .field-first {top: 10px;}
-  .canvas-caption .field-last {bottom: 76px;}
+  .canvas-caption .field-first {top: 16px;}
+  .canvas-caption .field-last {bottom: 90px;}
   .canvas-caption .expanded-checkbox {
     position: absolute !important;
     z-index: 100;
     left: 10px;
-    bottom: 44px;
+    bottom: 60px;
   }
   .canvas-caption .generate-image {
     position: absolute;
-    bottom: 0;
+    right: 9px; left: 9px; bottom: 16px;
     margin-top: 0;
-    width: 100%;
   }
   .canvas-caption .handler-fontsize {
     display: flex;
