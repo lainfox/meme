@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Adsense from '../components/Adsense';
 import RaisedButton from 'material-ui/RaisedButton';
+import {Link} from 'react-router-dom'
 import copyUrl from 'copy-to-clipboard';
 import './SaveMeme.css';
 
@@ -55,6 +56,9 @@ class SaveMeme extends Component {
               <li>Right mouse click on the images → Select "Download image to disk." or "Save this image as."</li>
               <li>Click "COPY URL" to copy URL → Paste URL in comments.</li>
             </ul>
+            <Link to="/" className="back-to-home">
+              <strong>&gt; Create new meme again!</strong>
+            </Link>
             <div className="hidden">
               <p>DeleteHash: {imgurDeleteHash}</p>
               <p>{memeId}</p>

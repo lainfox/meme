@@ -39,6 +39,12 @@
   border-bottom-right-radius: 5px !important;
   border-top-right-radius: 5px !important;
 }
+
+.back-to-home {
+  display: block;
+  margin: 2em 0;
+  font-size: 1.2em;
+}
 .hidden {
   display: none;
 }
@@ -59,5 +65,8 @@
   }
   .howTo {
     display: none;
+  }
+  .back-to-home {
+    text-align: center;
   }
 }
