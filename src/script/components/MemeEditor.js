@@ -308,8 +308,12 @@ class MemeEditor extends Component {
     //   this.saveButton.download = fileName;
     // }
 
+    const title = `${this.topText.value} ${this.bottomText.value}`;
 
-    this.submitPostImgurl(this.getBase64Image(this.canvas));
+    this.submitPostImgurl(this.getBase64Image(this.canvas),
+      title,
+      fileName
+    );
 
     // postToImgur = ({image, topText, botText, memeId}, callback)
 
@@ -324,7 +328,7 @@ class MemeEditor extends Component {
     }
   }
 
-  submitPostImgurl(image) {
+  submitPostImgurl(image, title, fileName) {
     // this.props.dispatch(
     //   postToImgur({
     //     image: image,
@@ -338,11 +342,12 @@ class MemeEditor extends Component {
     this._saveAndUploading(true);
 
     postToImgur({
-        image: image,
-        topText: this.topText.value,
-        botText: this.bottomText.value,
-        memeId: this.props.item.id || 'New file',
-      }, (response, {topText, botText, memeId}) => {
+      image: image,
+      topText: this.topText.value,
+      botText: this.bottomText.value,
+      memeId: this.props.item.id || 'New file',
+    }, title, fileName,
+      (response, {topText, botText, memeId}) => {
         this._saveAndUploading(false);
         
         this.props.dispatch(push({

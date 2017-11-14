@@ -1,5 +1,12 @@
 import 'whatwg-fetch'
 
+const IMGUR_API = 'https://api.imgur.com/3/image';
+// const imgurApi = 'https://api.imgur.com/3/upload.json';
+const CLIENT_ID = '99494c825f1f07c';
+const TOKEN = `Client-ID ${CLIENT_ID}`;
+const ALBUM_ID = '3k4iyXk5RQk8g7k';
+// const ALBUM_ID = 'l5YBM';
+
 export const processStatus = response => {
   if (response.status === 200 || response.status === 0) {
     return Promise.resolve(response)
@@ -42,16 +49,24 @@ export const parseJson = response => {
 // }
 
 const Imgur = () => {
-	const imgurApi = 'https://api.imgur.com/3/image';
+	const imgurApi = IMGUR_API;
 	// const imgurApi = 'https://api.imgur.com/3/upload.json';
-	const clientId = '99494c825f1f07c';
-	const token = `Client-ID ${clientId}`;
-	
+	const clientId = CLIENT_ID;
+	const token = TOKEN;
+	const albumId = ALBUM_ID;
+
+
 	return {
-		post(base64Image) {
+		post(base64Image, title, fileName) {
+			const title_tags = title.split(' ').map(item => `#${item}`).join(', ');
+
 	    const formData = new FormData();
 	    formData.append('type', 'file');
+	    formData.append('album', albumId);
 	    formData.append('image', base64Image);
+	    formData.append('title', title);
+	    formData.append('name', fileName);
+	    formData.append('description', `#meme, #onmeme, #funny, #pic, ${title_tags}`);
 
 	    return fetch(imgurApi, {
 	        method: 'POST',
