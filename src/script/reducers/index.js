@@ -3,6 +3,7 @@ import {combineReducers} from 'redux'
 // import {firebaseStateReducer as firebase} from 'react-redux-firebase'
 import {list, categoryFilter} from "./list";
 import {upload} from "./upload";
+import {imgur} from "./imgur";
 import counter from "./counter";
 
 // const rootReducer = {
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   list,
   categoryFilter,
   upload,
+  imgur,
   counter,
 })
 

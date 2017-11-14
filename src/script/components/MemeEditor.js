@@ -6,7 +6,7 @@ import GA from "react-ga";
 import * as slugify  from 'url-slug';
 // import {slugify} from 'transliteration';
 import shortId from 'shortid';
-import imgur from '../../vendor/imgur';
+import {postToImgur} from '../actions/imgur';
 
 import {resetFile} from '../actions/upload';
 import FontSwitch from '../components/FontSwitch'
@@ -60,7 +60,8 @@ class MemeEditor extends Component {
     this.state = {
       ratio: props.ratio,
       expand: false,
-      loaded: false
+      loaded: false,
+      saveAndUploading: false
     }
   }
 
@@ -290,25 +291,27 @@ class MemeEditor extends Component {
   }
   
   saveImage(ev) {
+    ev.preventDefault();
+    
     const fileName = `${this._getUrlSlug()}.jpg`;
 
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
     }
 
-    const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0));
+    // const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0));
 
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
-      window.navigator.msSaveOrOpenBlob(blob, fileName);
-    } else {
-      this.saveButton.href = URL.createObjectURL(blob);
-      this.saveButton.download = fileName;
-    }
+    // if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
+    //   window.navigator.msSaveOrOpenBlob(blob, fileName);
+    // } else {
+    //   this.saveButton.href = URL.createObjectURL(blob);
+    //   this.saveButton.download = fileName;
+    // }
 
-    imgur.post( this.getBase64Image(this.canvas) ).then(res => {
-      console.warn(res);
-    })
 
+    this.submitPostImgurl(this.getBase64Image(this.canvas));
+
+    // postToImgur = ({image, topText, botText, memeId}, callback)
 
     GA.event({
       category: 'create',
@@ -319,6 +322,48 @@ class MemeEditor extends Component {
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas();
     }
+  }
+
+  submitPostImgurl(image) {
+    // this.props.dispatch(
+    //   postToImgur({
+    //     image: image,
+    //     topText: this.topText.value,
+    //     botText: this.bottomText.value,
+    //     memeId: this.props.item.id || 'New file',
+    //   }));
+    // const saveButton = document.querySelector('#saveImage');
+    // saveButton.disabled = true;
+
+    this._saveAndUploading(true);
+
+    postToImgur({
+        image: image,
+        topText: this.topText.value,
+        botText: this.bottomText.value,
+        memeId: this.props.item.id || 'New file',
+      }, (response, {topText, botText, memeId}) => {
+        this._saveAndUploading(false);
+        
+        this.props.dispatch(push({
+          pathname: '/save-meme',
+          state: {
+            ratio: this.state.ratio,
+            watermakeArea: this.waterMarkArea,
+            response, 
+            topText, 
+            botText, 
+            memeId
+          }
+        }))
+        
+    });
+  }
+
+  _saveAndUploading(isUploading) {
+    this.setState({
+      saveAndUploading: isUploading
+    })
   }
 
   buildWaterMark() {
@@ -423,11 +468,16 @@ class MemeEditor extends Component {
             <FontSwitch fontFamily="sans-serif" onChangeFunc={isSerif => this._setFontFamily(isSerif)} />
             
             <div className="generate-image">
-              <a href="#" id="saveImage" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
-                <RaisedButton secondary={true} className="full-button">
-                Save image
-                </RaisedButton>
+              {this.state.saveAndUploading &&
+                <CircularProgress className="saveImageProgress" style={{ position: 'absolute', left: '50%', margin: '40px 0 0 -20px', color: 'grey' }} />
+              }
+              <RaisedButton secondary={true} disabled={this.state.saveAndUploading} id="saveImage" className="full-button" ref={button => this.saveButton = button} onClick={ev => this.saveImage(ev)}>
+              Save image
+              </RaisedButton>
+              {/*
+              <a href="#" id="saveImage" >
               </a>
+              */}
             </div>
           </div>
         </div>

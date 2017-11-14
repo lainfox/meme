@@ -60,6 +60,7 @@
   font-size: 1.2em;
 }
 .canvas-caption .generate-image {
+  position: relative;
   margin-top: 20px;
 }
 .canvas-caption .full-button {
