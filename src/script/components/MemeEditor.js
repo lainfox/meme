@@ -293,7 +293,8 @@ class MemeEditor extends Component {
   saveImage(ev) {
     ev.preventDefault();
     
-    const fileName = `${this._getUrlSlug()}.jpg`;
+    const title = this._getUrlSlug();
+    const fileName = `${title}.jpg`;
 
     if (!this.topText.value || !this.bottomText.value) {
       this.drawCanvas(true);
@@ -307,8 +308,6 @@ class MemeEditor extends Component {
     //   this.saveButton.href = URL.createObjectURL(blob);
     //   this.saveButton.download = fileName;
     // }
-
-    const title = `${this.topText.value} ${this.bottomText.value}`;
 
     this.submitPostImgurl(this.getBase64Image(this.canvas),
       title,
