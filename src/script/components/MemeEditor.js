@@ -27,7 +27,7 @@ import './MemeEditor.css';
 const FONT_FAMILY = 'Noto Sans KR'; //'gungsuh, 'Droid Serif', serif' // 'Nanum Gothic';
 const FONT_SIZE_ARRAY = [20,25,30,35,40,50,60,70,80,90,100,120,140,160,200,240,300];
 const FONT_SIZE_DEFAULT_INDEX = 3;
-const WATER_MARK_AREA = 30;
+const WATER_MARK_AREA = 0;
 const CANVAS_MAX_WIDTH = (window.outerWidth < 600) ? window.outerWidth : 600;
 const LINE_HEIGHT = 1.2;
 const TOP_DEFAULT_TEXT = 'Top text';
@@ -379,22 +379,12 @@ class MemeEditor extends Component {
     const ctx = this.canvas.getContext('2d');
     const img = document.querySelector('.logo img');
 
+    const waterMark_posY = this.canvas.height - this.waterMarkArea - 20;
+    /* // WaterMark BG
     ctx.lineWidth = 1;
     ctx.fillStyle = "#e4e4e4";
     ctx.strokeStyle = "#909090";
     ctx.fillRect(0, this.canvas.height - this.waterMarkArea, this.canvas.width, this.canvas.height);
-
-    ctx.save();
-    ctx.globalAlpha = 0.4;
-    ctx.drawImage(img, this.canvas.width - 26, this.canvas.height - this.waterMarkArea + 4, 24, 24);
-    ctx.restore();
-
-    ctx.fillStyle = "#313131";
-    ctx.textAlign = "right";
-    ctx.font = `600 14px Noto Sans KR`;
-    ctx.fillText(`onMeme.com`, this.canvas.width - 30, this.canvas.height - (this.waterMarkArea/3) + 2);
-    ctx.fillStyle = "#111";
-    ctx.fillText(`Meme.com`, this.canvas.width - 30, this.canvas.height - (this.waterMarkArea/3) + 2);
 
     ctx.beginPath();
     if (ctx.setLineDash) ctx.setLineDash([5, 6]);
@@ -402,6 +392,24 @@ class MemeEditor extends Component {
     ctx.lineTo(this.canvas.width, this.canvas.height - this.waterMarkArea + 1);
     ctx.stroke();
     if (ctx.setLineDash) ctx.setLineDash([]);
+    */
+
+    ctx.save();
+    ctx.globalAlpha = 0.6;
+    ctx.drawImage(img, this.canvas.width - 22, waterMark_posY, 18, 18);
+
+    ctx.fillStyle = "#313131";
+    ctx.textAlign = "right";
+    ctx.font = `600 10px Noto Sans KR`;
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#FFF";
+    ctx.strokeText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    ctx.globalAlpha = 1;
+
+    ctx.fillText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    ctx.fillStyle = "#111";
+    ctx.fillText(`Meme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    ctx.restore();
   }
 
   _setFontFamily(isSerifFont) {
