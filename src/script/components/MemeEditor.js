@@ -300,15 +300,20 @@ class MemeEditor extends Component {
       this.drawCanvas(true);
     }
 
-    // const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0));
-
+    /* 
+    *   Download to local directly
+    * /
+    // const blob = dataURLtoBlob(this.canvas.toDataURL('image/jpeg', 1.0)); 
     // if (window.navigator && window.navigator.msSaveOrOpenBlob) { // for IE
     //   window.navigator.msSaveOrOpenBlob(blob, fileName);
     // } else {
     //   this.saveButton.href = URL.createObjectURL(blob);
     //   this.saveButton.download = fileName;
     // }
-
+  
+    /*
+    *   Upload to Imgur
+     */
     this.submitPostImgurl(this.getBase64Image(this.canvas),
       title,
       fileName

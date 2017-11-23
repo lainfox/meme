@@ -57,9 +57,9 @@ const Imgur = () => {
 
 
 	return {
-		post(base64Image, title, fileName) {
-      // const title_tags = title.split('-').map(item => `#${item}`).join(', ');
-			const title_tags = title.replace(/-/g, ', ');;
+		post(base64Image, title, topText, botText, fileName) {
+      const title_tags = title.split('-').map(item => `#${item}`).join(', ');
+			// const title_tags = title.replace(/-/g, ', ');;
 
 	    const formData = new FormData();
 	    formData.append('type', 'file');
@@ -67,7 +67,7 @@ const Imgur = () => {
 	    formData.append('image', base64Image);
 	    formData.append('title', title);
 	    formData.append('name', fileName);
-	    formData.append('description', `${title_tags}, #meme, #onmeme, #funny, #pic`);
+	    formData.append('description', `${topText} ${botText} \r\n ${title_tags}, #meme, #onmeme, #funny, #pic`);
 
 	    return fetch(imgurApi, {
 	        method: 'POST',
