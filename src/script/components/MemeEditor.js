@@ -395,20 +395,30 @@ class MemeEditor extends Component {
     */
 
     ctx.save();
-    ctx.globalAlpha = 0.6;
-    ctx.drawImage(img, this.canvas.width - 22, waterMark_posY, 18, 18);
-
-    ctx.fillStyle = "#313131";
-    ctx.textAlign = "right";
-    ctx.font = `600 10px Noto Sans KR`;
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "#FFF";
-    ctx.strokeText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    ctx.globalAlpha = 0.85;
+    ctx.drawImage(img, this.canvas.width - 20, waterMark_posY, 18, 18);
     ctx.globalAlpha = 1;
 
+    ctx.textAlign = "right";
+    ctx.font = `600 11px Noto Sans KR`;
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#374646";
+    ctx.filter = "blur(1px)";
+    ctx.strokeText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
+
+    ctx.filter = "none";
+    ctx.fillStyle = "#d5dad6";
     ctx.fillText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
-    ctx.fillStyle = "#111";
+    ctx.fillStyle = "#efefef";
     ctx.fillText(`Meme.com`, this.canvas.width - 23, waterMark_posY + 15);
+
+    // ctx.globalAlpha = 1;
+    // ctx.fillStyle = "#313131";
+    // ctx.fillText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    // ctx.fillStyle = "#111";
+    // ctx.fillText(`Meme.com`, this.canvas.width - 23, waterMark_posY + 15);
+
+
     ctx.restore();
   }
 
