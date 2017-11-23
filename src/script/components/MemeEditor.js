@@ -401,22 +401,20 @@ class MemeEditor extends Component {
 
     ctx.textAlign = "right";
     ctx.font = `600 11px Noto Sans KR`;
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = "#374646";
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#c4c4c4";
     ctx.filter = "blur(1px)";
     ctx.strokeText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
 
     ctx.filter = "none";
-    ctx.fillStyle = "#d5dad6";
-    ctx.fillText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
-    ctx.fillStyle = "#efefef";
-    ctx.fillText(`Meme.com`, this.canvas.width - 23, waterMark_posY + 15);
-
-    // ctx.globalAlpha = 1;
-    // ctx.fillStyle = "#313131";
+    // ctx.fillStyle = "#d5dad6";
     // ctx.fillText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
-    // ctx.fillStyle = "#111";
+    // ctx.fillStyle = "#efefef";
     // ctx.fillText(`Meme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    ctx.fillStyle = "#313131";
+    ctx.fillText(`onMeme.com`, this.canvas.width - 23, waterMark_posY + 15);
+    ctx.fillStyle = "#111";
+    ctx.fillText(`Meme.com`, this.canvas.width - 23, waterMark_posY + 15);
 
 
     ctx.restore();
